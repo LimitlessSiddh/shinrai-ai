@@ -10,7 +10,7 @@ Legend: `[x]` verified by a command run locally · `[ ]` not done yet.
 - [x] Docker Compose: PostgreSQL 17 + NATS JetStream; optional `otel` profile (Jaeger)
 - [x] `.env.example`, `.gitignore`, `SECURITY.md`, issue/PR templates, Dependabot
 - [x] `ci.yml` (quality, integration, e2e, infra, workflow lint) and non-deploying `release-validation.yml`; actionlint clean
-- [ ] README quickstart verified from a fresh clone
+- [x] README quickstart verified from a fresh `git clone` (install, gates, integration, build, CDK, e2e all green)
 
 ## Phase B — Deterministic domain core
 
@@ -54,11 +54,42 @@ Legend: `[x]` verified by a command run locally · `[ ]` not done yet.
 - [x] Demo stack (S3+CloudFront, HTTP API + 4 Lambdas, EventBridge→SQS+DLQ, artifacts bucket, budgets, optional single-AZ RDS)
 - [x] `pnpm cdk:test` (18 assertions incl. forbidden primitives, tags, budgets, per-function roles) and `pnpm cdk:synth` with real bundling; **nothing deployed**
 
+## Phase I — Polymarket (optional)
+
+- [ ] Read-only comparison adapter: deliberately deferred (IMP-016). V1 does not depend on it.
+
+## Final verification (2026-10-20, fresh clone of `v1-implementation`)
+
+| Check | Command | Result |
+| --- | --- | --- |
+| Bootstrap | `corepack pnpm install --frozen-lockfile` | pass |
+| Format / lint / types | `pnpm format:check && pnpm lint && pnpm typecheck` | pass |
+| Unit | `pnpm test:unit` | 32/32 |
+| Evaluations | `pnpm test:eval` | 27/27 (incl. golden replay snapshot) |
+| Integration (Testcontainers) | `pnpm test:integration` | 34/34 |
+| E2E + a11y + screenshots | `pnpm test:e2e` | 16/16 |
+| Web build | `pnpm build` | pass (static export, 3 routes) |
+| CDK | `pnpm cdk:test && pnpm cdk:synth` | 18/18, synth OK (also with `enableRds=true`); nothing deployed |
+| Failure drills | `pnpm drill` | 6/6 PASS |
+| Workflow lint | `docker run rhysd/actionlint:1.7.7` | 0 findings |
+| Secret scan | `gitleaks git` with `.gitleaks.toml` | no leaks in history (idempotency-key false positives allowlisted) |
+
+## Open follow-ups for Siddh
+
+- `.env.example` still says `localhost:5432` and gives `agent-maker` a `trade` scope. My tool permissions blocked editing `.env*` files. Change the port to `55432`. The API already clamps agent scopes, so the second item is cosmetic.
+- Hosted authentication is not implemented (IMP-021).
+- The Polymarket adapter is deferred.
+- The branch has not been pushed.
+
 ## CEO Summary — Plain English
 
-- **What this is:** the live checklist for building Shinrai V1. Each box gets ticked only after a real check passes on this machine.
-- **What it means:** the core "rules engine" is done and tested. That covers who can buy, at what price, and how paper credits move. Next comes saving everything in a real database and building the screens.
-- **Key risk:** the money-like logic (paper credits) going wrong, for example spending the same credits twice or paying out twice. **The fix:** tests deliberately retry and duplicate requests and check that nothing is counted twice.
-- **On:** local-only build, fake money, fake AI.
-- **Off:** real money, real AI calls, AWS deployment, Polymarket.
-- **Your decisions:** none right now. Later you'll decide whether to push the branch and open a pull request.
+- **What this is:** the checklist and proof sheet for Shinrai V1. Every box is ticked only after a real command passed on this machine.
+- **What it means:** Shinrai now runs end to end on a laptop. An AI "trader" looks at a fake NBA market (pick who wins), cites evidence and asks to place a paper bet. Unsafe requests are blocked and the reason is shown. Every credit moves through a bank-style ledger (each move recorded twice, in and out). The whole game can be replayed and scored identically every time.
+- **Key risk and the fix:** the danger with money-like systems is double-spending or paying out twice. Tests fire 20 simultaneous orders, duplicate retries and five simultaneous settlements, and nothing is ever counted twice. The database itself refuses unbalanced or edited ledger rows.
+- **ON:** local app, dashboard (3 screens, works on phones, keyboard-accessible), fake AI, fake money, GitHub checks, and the AWS blueprint (generated only).
+- **OFF:** real money, real AI calls (opt-in switch exists but is off), AWS deployment (nothing is running or costing money), live sports data, and Polymarket.
+- **Your decisions:**
+  1. Fix two values in `.env.example` (I couldn't edit that file).
+  2. Push the branch and open a pull request?
+  3. Ever deploy a short AWS demo? That needs your explicit go-ahead.
+  4. Ever enable a real AI model with a spending cap?
