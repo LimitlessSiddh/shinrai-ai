@@ -47,7 +47,7 @@ Legend: `[x]` verified by a command run locally · `[ ]` not done yet.
 
 - [x] Redacted logs, OpenTelemetry spans, correlation trace view (`GET /trace/:id`, Dossier)
 - [x] Failure drills (`pnpm drill`, 6/6 PASS), Playwright e2e incl. axe + keyboard + reduced motion (16/16), screenshots in `docs/demo/screenshots/`
-- [ ] Developer docs
+- [x] Developer docs: README quickstart, architecture map, testing/drills, safety/threat/cost, demo walkthrough
 
 ## Phase H — AWS CDK (no deploy)
 
