@@ -1,0 +1,20 @@
+# Dependencies and build output
+node_modules/
+.next/
+dist/
+coverage/
+
+# Local services and runtime state
+.env
+.env.*
+!.env.example
+tmp/
+
+# Editor and operating-system files
+.DS_Store
+.vscode/
+
+# Infrastructure state
+cdk.out/
+*.tfstate
+*.tfstate.*
