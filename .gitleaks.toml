@@ -1,0 +1,8 @@
+# Extends the default ruleset. Idempotency keys are request identifiers, not credentials.
+[extend]
+useDefault = true
+
+[[allowlists]]
+description = "idempotencyKey values are request dedupe identifiers"
+regexTarget = "line"
+regexes = ['''idempotencyKey:\s*['"`][A-Za-z0-9:_.-]+['"`]''']

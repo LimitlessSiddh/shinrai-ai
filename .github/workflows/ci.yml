@@ -93,10 +93,14 @@ jobs:
       - run: pnpm cdk:synth
 
   workflows:
-    name: Workflow lint
+    name: Workflow lint and secret scan
     runs-on: ubuntu-24.04
     timeout-minutes: 5
     steps:
       - uses: actions/checkout@v5
+        with:
+          fetch-depth: 0
+      - name: gitleaks (history)
+        run: docker run --rm -v "$PWD:/repo" zricethezav/gitleaks:v8.28.0 git /repo --no-banner --config /repo/.gitleaks.toml --redact
       - name: actionlint
         run: docker run --rm -v "$PWD:/repo" -w /repo rhysd/actionlint:1.7.7 -color
