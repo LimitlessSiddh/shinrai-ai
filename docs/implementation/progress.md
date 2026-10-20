@@ -54,6 +54,13 @@ Legend: `[x]` verified by a command run locally · `[ ]` not done yet.
 - [x] Demo stack (S3+CloudFront, HTTP API + 4 Lambdas, EventBridge→SQS+DLQ, artifacts bucket, budgets, optional single-AZ RDS)
 - [x] `pnpm cdk:test` (18 assertions incl. forbidden primitives, tags, budgets, per-function roles) and `pnpm cdk:synth` with real bundling; **nothing deployed**
 
+## Post-V1 — Operator console redesign (2026-10-20)
+
+- [x] App shell (sidebar / mobile tab bar), ⌘K palette, toasts, live pipeline health
+- [x] Overview: market strip, edge meter, order book, fills, approval queue, tabbed actions
+- [x] New Runs, Ledger and System views; dossier rebuilt as a five-stage pipeline
+- [x] Verified: `pnpm test:e2e` 27/27 (axe on all six views), vitest 94/94, production build
+
 ## Phase I — Polymarket (optional)
 
 - [ ] Read-only comparison adapter: deliberately deferred (IMP-016). V1 does not depend on it.
