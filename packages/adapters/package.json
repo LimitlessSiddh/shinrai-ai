@@ -1,0 +1,18 @@
+{
+  "name": "@shinrai/adapters",
+  "version": "0.1.0",
+  "private": true,
+  "type": "module",
+  "exports": {
+    ".": "./src/index.ts"
+  },
+  "dependencies": {
+    "@shinrai/contracts": "workspace:*",
+    "@shinrai/domain": "workspace:*",
+    "@shinrai/agent-tools": "workspace:*",
+    "@shinrai/observability": "workspace:*",
+    "nats": "2.29.3",
+    "pg": "8.23.1",
+    "zod": "4.6.7"
+  }
+}

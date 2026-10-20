@@ -1,0 +1,16 @@
+{
+  "name": "@shinrai/observability",
+  "version": "0.1.0",
+  "private": true,
+  "type": "module",
+  "exports": {
+    ".": "./src/index.ts"
+  },
+  "dependencies": {
+    "@opentelemetry/api": "1.10.0",
+    "@opentelemetry/sdk-trace-base": "2.12.0",
+    "@opentelemetry/sdk-trace-node": "2.12.0",
+    "@opentelemetry/exporter-trace-otlp-http": "0.300.0",
+    "pino": "10.4.0"
+  }
+}

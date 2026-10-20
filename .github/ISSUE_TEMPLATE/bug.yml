@@ -1,0 +1,18 @@
+name: Bug report
+description: Something in the sandbox behaves incorrectly
+labels: [bug]
+body:
+  - type: textarea
+    id: what
+    attributes:
+      {
+        label: What happened,
+        description: Include the correlation ID from the API response if you have one.,
+      }
+    validations: { required: true }
+  - type: textarea
+    id: expected
+    attributes: { label: What you expected }
+  - type: textarea
+    id: repro
+    attributes: { label: Steps to reproduce }

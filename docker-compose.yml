@@ -1,0 +1,35 @@
+# Local V1 stack. Default: PostgreSQL + NATS JetStream. Optional: `--profile otel`.
+services:
+  postgres:
+    image: postgres:17.6-alpine
+    environment:
+      POSTGRES_USER: shinrai
+      POSTGRES_PASSWORD: shinrai_local
+      POSTGRES_DB: shinrai
+    ports: ['5432:5432']
+    volumes: [pgdata:/var/lib/postgresql/data]
+    healthcheck:
+      test: ['CMD-SHELL', 'pg_isready -U shinrai']
+      interval: 2s
+      retries: 30
+
+  nats:
+    image: nats:2.11.9-alpine
+    command: ['-js', '-sd', '/data', '-m', '8222']
+    ports: ['4222:4222', '8222:8222']
+    volumes: [natsdata:/data]
+    healthcheck:
+      test: ['CMD', 'wget', '-qO-', 'http://localhost:8222/healthz']
+      interval: 2s
+      retries: 30
+
+  jaeger:
+    profiles: [otel]
+    image: jaegertracing/all-in-one:1.73.0
+    environment:
+      COLLECTOR_OTLP_ENABLED: 'true'
+    ports: ['16686:16686', '4318:4318']
+
+volumes:
+  pgdata:
+  natsdata:

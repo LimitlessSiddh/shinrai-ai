@@ -1,0 +1,15 @@
+name: Feature request
+description: Propose a change within the paper-only V1 boundaries
+labels: [enhancement]
+body:
+  - type: textarea
+    id: problem
+    attributes: { label: Problem }
+    validations: { required: true }
+  - type: checkboxes
+    id: scope
+    attributes:
+      label: Scope
+      options:
+        - label: This stays paper-only and adds no real-money, wallet or exchange capability.
+          required: true
