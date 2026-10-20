@@ -28,8 +28,9 @@ Legend: `[x]` verified by a command run locally · `[ ]` not done yet.
 
 ## Phase D — Events, projections, replay
 
-- [ ] NATS JetStream outbox relay, idempotent projector, retry + dead letter
-- [ ] Projection rebuild and replay command with a stable report
+- [x] NATS JetStream outbox relay (msgID dedupe), idempotent projector (`event_deliveries`), NAK backoff retry, dead letter table + DLQ stream
+- [x] Projection rebuild from the outbox (`rebuildProjections`), verified equal after truncate
+- [ ] Replay command with a stable report (lands with the agent fixtures in Phase F)
 
 ## Phase E — API and dashboard
 

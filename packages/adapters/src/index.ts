@@ -2,3 +2,7 @@ export * from './postgres/pool';
 export * from './postgres/migrate';
 export * from './postgres/store';
 export * from './postgres/exchange';
+export * from './postgres/queries';
+export * from './postgres/projector';
+export * from './nats/bus';
+export * from './worker';
