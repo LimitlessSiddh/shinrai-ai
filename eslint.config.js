@@ -23,6 +23,7 @@ export default tseslint.config(
     ignores: [
       '**/node_modules/',
       '**/.next/',
+      '**/.next-e2e/',
       '**/out/',
       '**/cdk.out/',
       'coverage/',

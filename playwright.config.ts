@@ -29,11 +29,15 @@ export default defineConfig({
     },
     {
       command:
-        'pnpm --filter @shinrai/web exec next build && tsx scripts/serve-static.ts apps/web/out 3100',
+        'pnpm --filter @shinrai/web exec next build && tsx scripts/serve-static.ts apps/web/.next-e2e 3100',
       url: 'http://localhost:3100',
       reuseExistingServer: false,
       timeout: 180_000,
-      env: { NEXT_PUBLIC_API_URL: 'http://localhost:4100', NEXT_TELEMETRY_DISABLED: '1' },
+      env: {
+        NEXT_PUBLIC_API_URL: 'http://localhost:4100',
+        NEXT_TELEMETRY_DISABLED: '1',
+        NEXT_DIST_DIR: '.next-e2e',
+      },
     },
   ],
 });

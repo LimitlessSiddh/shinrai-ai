@@ -7,6 +7,17 @@ import { ApiError, ok, parse, requireScope } from './http';
 import { traceByCorrelation } from './trace';
 
 const IdParam = z.strictObject({ id: Id });
+
+/** Agent runs with their last order request and policy decision. Callers append filters/order/limit. */
+const RUNS_SQL = `SELECT r.run_id, r.agent_id, r.market_id, r.scenario, r.model, r.status, r.correlation_id, r.started_at, r.conclusion,
+       o.input AS order_request, o.output AS order_result, o.policy_decision, o.reasons, o.ok AS order_ok,
+       (SELECT count(*)::int FROM agent_tool_calls c WHERE c.tenant_id = r.tenant_id AND c.run_id = r.run_id) AS tool_calls,
+       (SELECT count(*)::int FROM agent_tool_calls c WHERE c.tenant_id = r.tenant_id AND c.run_id = r.run_id AND c.policy_decision = 'blocked') AS blocked_calls,
+       (SELECT approval_id FROM approval_requests a WHERE a.tenant_id = r.tenant_id AND a.run_id = r.run_id AND a.status = 'pending' LIMIT 1) AS pending_approval
+  FROM agent_runs r
+  LEFT JOIN LATERAL (SELECT * FROM agent_tool_calls c WHERE c.tenant_id = r.tenant_id AND c.run_id = r.run_id AND c.tool = 'requestOrder'
+                     ORDER BY c.seq DESC LIMIT 1) o ON true
+ WHERE r.tenant_id = $1`;
 const Limit = z.coerce.number().int().min(1).max(200).default(50);
 
 export function queryRoutes(app: FastifyInstance, s: Services) {
@@ -43,14 +54,20 @@ export function queryRoutes(app: FastifyInstance, s: Services) {
     const source = await readMarketView(db, p.tenantId, id);
     if (!source) throw new ApiError(404, 'MARKET_NOT_FOUND', id);
     const runs = await db.query(
-      `SELECT r.run_id, r.agent_id, r.scenario, r.model, r.status, r.correlation_id, r.started_at, r.conclusion,
-              o.input AS order_request, o.output AS order_result, o.policy_decision, o.reasons, o.ok AS order_ok,
-              (SELECT count(*)::int FROM agent_tool_calls c WHERE c.tenant_id = r.tenant_id AND c.run_id = r.run_id) AS tool_calls,
-              (SELECT approval_id FROM approval_requests a WHERE a.tenant_id = r.tenant_id AND a.run_id = r.run_id AND a.status = 'pending' LIMIT 1) AS pending_approval
-         FROM agent_runs r
-         LEFT JOIN LATERAL (SELECT * FROM agent_tool_calls c WHERE c.tenant_id = r.tenant_id AND c.run_id = r.run_id AND c.tool = 'requestOrder'
-                            ORDER BY c.seq DESC LIMIT 1) o ON true
-        WHERE r.tenant_id = $1 AND r.market_id = $2 ORDER BY r.started_at DESC, r.run_id DESC LIMIT 20`,
+      `${RUNS_SQL} AND r.market_id = $2 ORDER BY r.started_at DESC, r.run_id DESC LIMIT 20`,
+      [p.tenantId, id],
+    );
+    // Depth by outcome and price, best first; quantities are unfilled contracts.
+    const book = await db.query(
+      `SELECT outcome, price, sum(quantity - filled_quantity)::int AS quantity, count(*)::int AS orders
+         FROM orders WHERE tenant_id = $1 AND market_id = $2 AND status = 'open'
+        GROUP BY outcome, price ORDER BY outcome, price DESC`,
+      [p.tenantId, id],
+    );
+    const fills = await db.query(
+      `SELECT f.fill_id, f.yes_price, f.quantity, f.yes_owner_id, f.no_owner_id, f.sequence, o.created_at
+         FROM fills f JOIN orders o ON o.tenant_id = f.tenant_id AND o.order_id = f.taker_order_id
+        WHERE f.tenant_id = $1 AND f.market_id = $2 ORDER BY f.sequence DESC LIMIT 12`,
       [p.tenantId, id],
     );
     const evidence = await db.query(
@@ -69,6 +86,8 @@ export function queryRoutes(app: FastifyInstance, s: Services) {
         : null,
       evidence: evidence.rows.map((r) => r.item),
       runs: runs.rows,
+      book: book.rows,
+      fills: fills.rows,
     });
   });
 
@@ -134,6 +153,64 @@ export function queryRoutes(app: FastifyInstance, s: Services) {
     return ok(req, reply, await traceByCorrelation(db, p.tenantId, id));
   });
 
+  app.get('/runs', async (req, reply) => {
+    const p = requireScope(req, 'read');
+    const q = parse(z.object({ limit: Limit }), req.query);
+    const r = await db.query(`${RUNS_SQL} ORDER BY r.started_at DESC, r.run_id DESC LIMIT $2`, [
+      p.tenantId,
+      q.limit,
+    ]);
+    return ok(req, reply, r.rows);
+  });
+
+  /** General journal: newest ledger transactions with their balanced entries. */
+  app.get('/ledger', async (req, reply) => {
+    const p = requireScope(req, 'read');
+    const q = parse(z.object({ limit: Limit }), req.query);
+    const r = await db.query(
+      `SELECT t.tx_id, t.reason, t.order_id, t.correlation_id, t.created_at, t.seq,
+              json_agg(json_build_object('entryNo', e.entry_no, 'accountId', e.account_id, 'direction', e.direction, 'amount', e.amount)
+                       ORDER BY e.entry_no) AS entries
+         FROM ledger_transactions t JOIN ledger_entries e USING (tenant_id, tx_id)
+        WHERE t.tenant_id = $1
+        GROUP BY t.tenant_id, t.tx_id, t.reason, t.order_id, t.correlation_id, t.created_at, t.seq
+        ORDER BY t.seq DESC LIMIT $2`,
+      [p.tenantId, q.limit],
+    );
+    const accounts = await db.query(
+      `SELECT account_id, kind, balance FROM ledger_accounts WHERE tenant_id = $1 ORDER BY kind, account_id`,
+      [p.tenantId],
+    );
+    return ok(req, reply, { transactions: r.rows, accounts: accounts.rows });
+  });
+
+  /** Pipeline health: outbox backlog, projection lag and dead letters. */
+  app.get('/system', async (req, reply) => {
+    const p = requireScope(req, 'read');
+    const r = await db.query(
+      `SELECT (SELECT count(*)::int FROM outbox_events WHERE tenant_id = $1) AS events,
+              (SELECT count(*)::int FROM outbox_events WHERE tenant_id = $1 AND published_at IS NULL) AS unpublished,
+              (SELECT count(*)::int FROM outbox_events o WHERE o.tenant_id = $1 AND NOT EXISTS
+                 (SELECT 1 FROM event_deliveries d WHERE d.consumer = 'projector' AND d.event_id = o.event_id)) AS unprojected,
+              (SELECT max(occurred_at) FROM outbox_events WHERE tenant_id = $1) AS last_event_at,
+              (SELECT max(delivered_at) FROM event_deliveries d JOIN outbox_events o USING (event_id)
+                WHERE o.tenant_id = $1 AND d.consumer = 'projector') AS last_projected_at,
+              (SELECT count(*)::int FROM audit_log WHERE tenant_id = $1) AS commands,
+              (SELECT count(*)::int FROM audit_log WHERE tenant_id = $1 AND outcome = 'rejected') AS rejected,
+              (SELECT count(*)::int FROM ledger_transactions WHERE tenant_id = $1) AS ledger_transactions`,
+      [p.tenantId],
+    );
+    const dead = await db.query(
+      'SELECT consumer, event_id, attempts, error, created_at FROM dead_letters ORDER BY id DESC LIMIT 20',
+    );
+    return ok(req, reply, {
+      ...r.rows[0],
+      deadLetters: dead.rows,
+      profile: s.config.profile,
+      model: s.config.model.openaiEnabled ? 'openai (opt-in)' : 'fake-deterministic',
+    });
+  });
+
   app.get('/fixtures', async (req, reply) => {
     requireScope(req, 'read');
     const out = [];
@@ -161,14 +238,6 @@ export function queryRoutes(app: FastifyInstance, s: Services) {
       `SELECT evaluation_id, fixture_version, replay_tenant, report, report_hash, correlation_id, created_at
          FROM evaluation_runs WHERE tenant_id = $1 ORDER BY created_at DESC LIMIT 20`,
       [p.tenantId],
-    );
-    return ok(req, reply, r.rows);
-  });
-
-  app.get('/dead-letters', async (req, reply) => {
-    requireScope(req, 'read');
-    const r = await db.query(
-      'SELECT consumer, event_id, attempts, error, created_at FROM dead_letters ORDER BY id DESC LIMIT 50',
     );
     return ok(req, reply, r.rows);
   });

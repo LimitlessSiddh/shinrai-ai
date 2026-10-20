@@ -28,9 +28,16 @@ export async function ensureSeeded(request: APIRequestContext) {
   await apiPost(request, `/fixtures/${FIXTURE}/seed`);
 }
 
-export async function openMarket(page: Page) {
+export const MARKET_HEADING = 'Boston at New York';
+
+export async function openOverview(page: Page) {
   await page.goto('/');
-  await expect(page.getByRole('heading', { name: 'The market is a conversation.' })).toBeVisible();
+  await expect(page.getByRole('heading', { level: 1, name: MARKET_HEADING })).toBeVisible();
 }
 
-export const credits = (s: string | null) => Number((s ?? '').replace(/,/g, ''));
+/** Selects an action-panel tab (Agent run / Paper order / Resolve). */
+export async function actionTab(page: Page, name: 'Agent run' | 'Paper order' | 'Resolve') {
+  await page.getByRole('tab', { name }).click();
+}
+
+export const toast = (page: Page) => page.getByTestId('toast').last();

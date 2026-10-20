@@ -1,93 +1,93 @@
 'use client';
 
+import { Database, LoaderCircle } from 'lucide-react';
 import { useState } from 'react';
-import { ActivityFeed, Portfolios } from '@/components/Ledger';
-import { MarketHero } from '@/components/MarketHero';
-import { OperatorConsole } from '@/components/OperatorConsole';
-import { Announce, Empty, ErrorState, Loading, Status } from '@/components/ui';
-import { api, ApiFailure, time, usePoll } from '@/lib/api';
-import type { ActivityRow, FixtureInfo, MarketDetail, MarketRow } from '@/lib/types';
+import { ActionPanel, ApprovalQueue } from '@/components/market/ActionPanel';
+import { ActivityTimeline, Balances } from '@/components/market/Activity';
+import {
+  EdgeMeter,
+  Fills,
+  MarketStrip,
+  OrderBook,
+  ThesisCard,
+} from '@/components/market/MarketPanels';
+import { Empty, ErrorState, LoadingPanel } from '@/components/ui';
+import { api, ApiFailure } from '@/lib/api';
+import { useWorkspace } from '@/lib/workspace';
 
-function SeedFixture({ fixture, onDone }: { fixture: FixtureInfo | null; onDone: () => void }) {
-  const [state, setState] = useState<'idle' | 'busy' | ApiFailure>('idle');
+function SeedFixture() {
+  const { fixture, refresh, notify } = useWorkspace();
+  const [busy, setBusy] = useState(false);
   const seed = async () => {
     if (!fixture) return;
-    setState('busy');
+    setBusy(true);
     try {
       await api(`/fixtures/${fixture.fixtureVersion}/seed`, { method: 'POST' });
-      setState('idle');
-      onDone();
+      notify({
+        tone: 'success',
+        title: 'Fixture seeded',
+        detail: `${fixture.fixtureVersion}: market opened, accounts funded, liquidity placed`,
+      });
+      refresh();
     } catch (e) {
-      setState(e instanceof ApiFailure ? e : new ApiFailure(0, 'UNKNOWN', String(e), null));
+      notify({
+        tone: 'danger',
+        title: e instanceof ApiFailure ? e.code : 'Seed failed',
+        detail: e instanceof ApiFailure ? e.message : String(e),
+      });
+    } finally {
+      setBusy(false);
     }
   };
   return (
-    <Empty title="No paper market yet">
-      <p className="secondary">
-        Seed the versioned NBA fixture to open a market, fund paper accounts and place scripted
-        liquidity.
-      </p>
-      <button
-        type="button"
-        className="btn btn-primary"
-        onClick={seed}
-        disabled={!fixture || state === 'busy'}
-      >
-        {state === 'busy' ? 'Seeding…' : `Seed fixture ${fixture?.fixtureVersion ?? ''}`}
-      </button>
-      <Announce>
-        {state instanceof ApiFailure ? (
-          <Status tone="danger">{`${state.code}: ${state.message}`}</Status>
-        ) : null}
-      </Announce>
-    </Empty>
+    <div className="panel">
+      <Empty icon={Database} title="No paper market yet">
+        <p className="muted" style={{ maxWidth: '52ch' }}>
+          Seed the versioned NBA fixture to open a market, fund four paper accounts and place
+          scripted liquidity. Nothing leaves this machine.
+        </p>
+        <button
+          type="button"
+          className="btn btn-primary"
+          onClick={seed}
+          disabled={!fixture || busy}
+        >
+          {busy ? <LoaderCircle size={16} className="spin" aria-hidden="true" /> : null}
+          {busy ? 'Seeding…' : `Seed fixture ${fixture?.fixtureVersion ?? ''}`}
+        </button>
+      </Empty>
+    </div>
   );
 }
 
-function LatestStrip() {
-  const a = usePoll<ActivityRow[]>('/activity?limit=1', 2000);
-  const r = a.data?.[0];
-  if (!r) return null;
-  return (
-    <section
-      className="card section row"
-      aria-label="Latest event"
-      style={{ justifyContent: 'space-between' }}
-    >
-      <span className="meta">{time(r.occurred_at)}</span>
-      <span style={{ flex: '1 1 320px' }}>{r.summary}</span>
-      <span className="meta" style={{ textTransform: 'none' }}>
-        trace {r.correlation_id}
-      </span>
-    </section>
-  );
-}
+export default function Overview() {
+  const { marketId, marketsLoading, marketsError, detail, detailError, refresh } = useWorkspace();
 
-export default function MarketPage() {
-  const markets = usePoll<MarketRow[]>('/markets', 3000);
-  const fixtures = usePoll<FixtureInfo[]>('/fixtures', 60_000);
-  const marketId = markets.data?.[0]?.market_id ?? null;
-  const detail = usePoll<MarketDetail>(
-    marketId ? `/markets/${encodeURIComponent(marketId)}` : null,
-    2000,
-  );
-  const fixture = fixtures.data?.[0] ?? null;
-
-  if (markets.error) return <ErrorState error={markets.error} onRetry={markets.refresh} />;
-  if (markets.loading) return <Loading label="markets" />;
-  if (!marketId) return <SeedFixture fixture={fixture} onDone={markets.refresh} />;
-  if (detail.error) return <ErrorState error={detail.error} onRetry={detail.refresh} />;
-  if (!detail.data) return <Loading label="market" />;
+  if (marketsError) return <ErrorState error={marketsError} onRetry={refresh} />;
+  if (marketsLoading) return <LoadingPanel label="markets" rows={5} />;
+  if (!marketId) return <SeedFixture />;
+  if (detailError) return <ErrorState error={detailError} onRetry={refresh} />;
+  if (!detail) return <LoadingPanel label="market" rows={5} />;
 
   return (
-    <>
-      <MarketHero detail={detail.data} />
-      <LatestStrip />
-      <OperatorConsole detail={detail.data} fixture={fixture} onChange={detail.refresh} />
-      <section className="grid grid-2 section">
-        <Portfolios />
-        <ActivityFeed />
-      </section>
-    </>
+    <div className="stack settle" style={{ gap: 'var(--space-5)' }}>
+      <MarketStrip detail={detail} />
+      <ApprovalQueue detail={detail} />
+      <div className="grid cols-main">
+        <div className="stack" style={{ gap: 'var(--space-5)' }}>
+          <ThesisCard detail={detail} />
+          <EdgeMeter detail={detail} />
+          <div className="grid cols-2">
+            <OrderBook detail={detail} />
+            <Fills detail={detail} />
+          </div>
+        </div>
+        <div className="stack" style={{ gap: 'var(--space-5)' }}>
+          <ActionPanel detail={detail} />
+          <Balances />
+        </div>
+      </div>
+      <ActivityTimeline />
+    </div>
   );
 }

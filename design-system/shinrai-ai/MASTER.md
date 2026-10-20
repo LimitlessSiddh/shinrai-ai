@@ -18,7 +18,7 @@ Shinrai is an auditable agent-operations console, not a sportsbook. Its visual l
 | Strong border | `#46534B` | `--color-border-strong` | Focused or selected outline |
 | Primary text | `#F3F6F1` | `--color-text-primary` | Headings and important values |
 | Secondary text | `#A7B0A9` | `--color-text-secondary` | Supporting copy |
-| Tertiary text | `#737D75` | `--color-text-tertiary` | Metadata only; never essential content alone |
+| Tertiary text | `#737D75` | `--color-text-tertiary` | Non-text marks only (dividers, decorative ticks). Fails AA as text on raised surfaces |
 | Steel | `#8D9990` | `--color-steel` | Neutral data series and inactive states |
 | Signal | `#C7FF3D` | `--color-signal` | Primary intent, active thesis, selected action |
 | Accepted | `#53E1A5` | `--color-success` | Policy-approved / healthy state |
@@ -49,11 +49,11 @@ Shinrai is an auditable agent-operations console, not a sportsbook. Its visual l
 - Signal green means **operator intent or an active decision**. It is not a general decorative color and is not the same as success.
 - Success, warning, and danger describe an observed system state. Pair every status color with an icon and text.
 - Do not use gradients, purple, warm cream, or neon-green full-page backgrounds in the product UI.
-- Use `--color-text-tertiary` only for nonessential metadata. Body copy must meet WCAG AA contrast on its surface.
+- Do not use `--color-text-tertiary` for text: it measures below 4.5:1 on raised surfaces (caught by axe in the V1 console). All text uses primary or secondary. Body copy must meet WCAG AA contrast on its surface.
 
 ## Type and spacing
 
-- **Font:** Inter; use a compact monospace face only for IDs, event times, prices, and trace hashes.
+- **Font:** Archivo (variable, with width axis), self-hosted via `@fontsource-variable/archivo`. Use expanded widths (112–120%) for display and the brand. JetBrains Mono (tabular figures) only for IDs, event times, prices, quantities and trace hashes. Both are bundled locally, so the console works offline. This replaced Inter in the V1 console redesign (IMP-022).
 - **Display:** 48–72px, 700 weight, tight tracking. Reserve for one decision or market framing statement.
 - **Section heading:** 20–28px, 650–700 weight.
 - **Body:** 14–16px, 400–500 weight.
@@ -73,7 +73,7 @@ Shinrai is an auditable agent-operations console, not a sportsbook. Its visual l
 
 - Base card: raised surface, 1px subtle border, 16px radius, no drop shadow.
 - Selected/active card: strong surface plus strong border—not a large glow.
-- Numeric values are primary text; labels are secondary/tertiary; status is expressed by text, icon, then color.
+- Numeric values are primary text; labels are secondary; status is expressed by text, icon, then color.
 
 ### Charts and traces
 

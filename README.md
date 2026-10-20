@@ -34,13 +34,18 @@ No `.env` is needed: every setting has a safe local default, and the API falls b
 
 ## What to look at
 
-| View                            | Shows                                                                                                                                                                                |
-| ------------------------------- | ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------ |
-| **Market** (`/`)                | Live paper market, the agent's thesis and policy result, market pulse, operator console (run agent, human paper order, approve/reject held orders, resolve once), balances, activity |
-| **Dossier** (`/dossier/?run=…`) | Evidence → order → policy gate → committed/blocked, and the full correlation trace: tool calls, command audit, ledger postings, outbox events, projections                           |
-| **Replay** (`/replay/`)         | Brier score, log loss, paper PnL, drawdown, policy adherence, tool success, violations per agent; report hash reproduced across replays                                              |
+The dashboard is an operator console: a sidebar on desktop and a bottom tab bar on phones. Press **⌘K / Ctrl+K** anywhere to jump to a page or launch an agent scenario.
 
-Screenshots: [`docs/demo/screenshots/`](docs/demo/screenshots/) (1440px and 375px).
+| View                                          | Shows                                                                                                                                                                                                                                                                                                              |
+| --------------------------------------------- | ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------ |
+| **Overview** (`/`)                            | Market strip with paper prices and the active agent thesis. An edge meter compares the market-implied probability with the agent's belief. Order-book depth, recent fills, the approval queue and a tabbed action panel (agent run, human paper order, resolve once). Balances and a filterable activity timeline. |
+| **Runs** (`/runs/`)                           | Every agent run, its order request and policy decision, with filters. Each row opens a dossier.                                                                                                                                                                                                                    |
+| **Dossier** (`/dossier/?run=…` or `?trace=…`) | A five-stage pipeline (evidence → proposal → policy → ledger → events), policy budget and size meters, cited evidence, ledger postings, and the full expandable correlation trace.                                                                                                                                 |
+| **Ledger** (`/ledger/`)                       | A books-balance check, account balances by kind, and the double-entry journal filtered by transaction type.                                                                                                                                                                                                        |
+| **Replay** (`/replay/`)                       | Per-agent Brier, log loss, PnL, drawdown, adherence and tool success; an equity chart with a data table; replay history proving identical report hashes.                                                                                                                                                           |
+| **System** (`/system/`)                       | Outbox backlog, projection lag, the event pipeline, dead letters and the guarantees behind them.                                                                                                                                                                                                                   |
+
+Screenshots of all six views at 1440px and 390px: [`docs/demo/screenshots/`](docs/demo/screenshots/).
 
 ## Commands
 

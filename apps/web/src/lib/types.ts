@@ -49,11 +49,26 @@ export type RunSummary = {
   reasons: PolicyReason[] | null;
   order_ok: boolean | null;
   tool_calls: number;
+  blocked_calls: number;
   pending_approval: string | null;
+  market_id: string;
+};
+
+export type BookLevel = { outcome: 'YES' | 'NO'; price: number; quantity: number; orders: number };
+export type FillRow = {
+  fill_id: string;
+  yes_price: number;
+  quantity: number;
+  yes_owner_id: string;
+  no_owner_id: string;
+  sequence: number;
+  created_at: string;
 };
 
 export type MarketDetail = {
   market: Market;
+  book: BookLevel[];
+  fills: FillRow[];
   projection: {
     view: MarketViewDto;
     appliedEvents: number;
@@ -201,4 +216,43 @@ export type FixtureInfo = {
   fixtureKey: string;
   marketId: string;
   scenarios: { scenarioId: string; agentId: string; title: string; description: string }[];
+};
+
+export type JournalTx = {
+  tx_id: string;
+  reason: 'grant' | 'reserve' | 'fill' | 'release' | 'settle';
+  order_id: string | null;
+  correlation_id: string;
+  created_at: string;
+  seq: number;
+  entries: { entryNo: number; accountId: string; direction: 'debit' | 'credit'; amount: number }[];
+};
+
+export type LedgerDto = {
+  transactions: JournalTx[];
+  accounts: {
+    account_id: string;
+    kind: 'available' | 'reserved' | 'escrow' | 'issuance';
+    balance: number;
+  }[];
+};
+
+export type SystemDto = {
+  events: number;
+  unpublished: number;
+  unprojected: number;
+  last_event_at: string | null;
+  last_projected_at: string | null;
+  commands: number;
+  rejected: number;
+  ledger_transactions: number;
+  deadLetters: {
+    consumer: string;
+    event_id: string;
+    attempts: number;
+    error: string;
+    created_at: string;
+  }[];
+  profile: string;
+  model: string;
 };

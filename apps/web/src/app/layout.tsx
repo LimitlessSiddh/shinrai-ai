@@ -1,10 +1,16 @@
 import type { Metadata, Viewport } from 'next';
 import type { ReactNode } from 'react';
-import { Shell } from '@/components/Shell';
-import './globals.css';
+import '@fontsource-variable/archivo/wdth.css';
+import '@fontsource-variable/jetbrains-mono';
+import { AppShell } from '@/components/shell/AppShell';
+import '../styles/tokens.css';
+import '../styles/base.css';
+import '../styles/shell.css';
+import '../styles/components.css';
+import '../styles/views.css';
 
 export const metadata: Metadata = {
-  title: 'Shinrai — paper market sandbox',
+  title: 'Shinrai — agent market OS',
   description: 'Auditable, paper-only NBA prediction-market sandbox for AI agents.',
 };
 
@@ -14,7 +20,7 @@ export default function RootLayout({ children }: { children: ReactNode }) {
   return (
     <html lang="en">
       <body>
-        <Shell>{children}</Shell>
+        <AppShell>{children}</AppShell>
       </body>
     </html>
   );

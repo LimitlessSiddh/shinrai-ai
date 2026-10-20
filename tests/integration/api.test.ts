@@ -238,6 +238,38 @@ describe('HTTP API', () => {
     expect(conflict.statusCode).toBe(409);
   });
 
+  it('serves order book depth, fills, runs, the journal and pipeline health', async () => {
+    const m = (await call('GET', `/markets/${MARKET}`)).json().data;
+    expect(m.book).toEqual([]); // resolution cancelled every resting order
+    expect(m.fills[0]).toMatchObject({
+      yes_price: expect.any(Number),
+      quantity: expect.any(Number),
+    });
+
+    const runs = (await call('GET', '/runs?limit=5')).json().data;
+    expect(runs.length).toBeGreaterThan(0);
+    expect(runs[0]).toHaveProperty('blocked_calls');
+
+    const ledger = (await call('GET', '/ledger?limit=10')).json().data;
+    for (const tx of ledger.transactions) {
+      const net = tx.entries.reduce(
+        (s: number, e: { direction: string; amount: number }) =>
+          s + (e.direction === 'credit' ? e.amount : -e.amount),
+        0,
+      );
+      expect(net).toBe(0);
+    }
+    expect(ledger.accounts.some((a: { kind: string }) => a.kind === 'issuance')).toBe(true);
+
+    const sys = (await call('GET', '/system')).json().data;
+    expect(sys).toMatchObject({
+      events: expect.any(Number),
+      unpublished: expect.any(Number),
+      deadLetters: [],
+      model: 'fake-deterministic',
+    });
+  });
+
   it('runs a replay and serves the stored evaluation', async () => {
     const r = await call('POST', '/replays', { fixtureVersion: FIXTURE });
     expect(r.statusCode).toBe(201);

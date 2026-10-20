@@ -44,7 +44,7 @@ The editable Figma file contains all three screens plus `00 — Stealth Signal /
 ## Build decisions
 
 - **Desktop first:** command-center layout at 1440px. On smaller screens, preserve current market and decision status first; move secondary trace detail below the fold.
-- **Typography:** Inter for interface and narrative; a monospace face only for trace IDs, prices, fixture IDs and event time.
+- **Typography:** Archivo (expanded widths for display) for interface and narrative; JetBrains Mono only for trace IDs, prices, fixture IDs and event time. Inter was replaced in the V1 console redesign; see `design-system/shinrai-ai/MASTER.md`.
 - **Shape:** 16px cards, 999px pills only for compact statuses/filters, 1px low-contrast borders, no elevation shadows.
 - **Charts:** signal green only marks the selected thesis/current decision; steel is reference. Every chart needs labels and a text alternative/data-table path.
 - **Motion:** 150–220ms state transitions only. Respect reduced motion.

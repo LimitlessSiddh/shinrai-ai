@@ -5,7 +5,7 @@
 | Unit (no I/O) | `tests/unit` | Price-time priority, partial fills, maker-price execution with refunds, balanced postings, escrow = 100 × matched pairs, idempotent replay/conflict, exactly-once settlement, event metadata, policy rules, metric math |
 | Integration (Testcontainers) | `tests/integration` | See the list below |
 | Evaluations (no I/O) | `tests/evaluations` | Every unsafe scenario is blocked with zero mutation; malformed input never reaches the domain; only five tools exist; golden replay report snapshot |
-| E2E (Playwright) | `tests/e2e` | Empty state → seed; rejected order with zero mutation; blocked agent with a visible reason; full lifecycle with exact balances; replay reproduced; axe WCAG 2.1 A/AA, keyboard, focus ring, reduced motion, colour-independent status, no horizontal scroll at 375px; screenshots |
+| E2E (Playwright) | `tests/e2e` | Empty state → seed; rejected order with zero mutation; blocked agent with a visible reason; full lifecycle with exact balances; replay reproduced; axe WCAG 2.1 A/AA, keyboard, focus ring, reduced motion, colour-independent status, no horizontal scroll at 390px; ARIA tabs and command palette keyboard paths; screenshots of all six views |
 | Infra | `infra/cdk/test` | Forbidden primitives absent, tags, budgets, per-function roles, DLQ, private bucket, RDS single-AZ |
 
 What the integration suites cover:
