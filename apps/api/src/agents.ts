@@ -10,8 +10,8 @@ import {
   type PostgresExchange,
 } from '@shinrai/adapters';
 import { runScenario, seedFixture, type ModelRunner } from '@shinrai/agent-tools';
-import type { Principal, ToolInput } from '@shinrai/contracts';
-import { evaluateOrderPolicy, systemClock } from '@shinrai/domain';
+import type { Principal, Scenario, ToolInput } from '@shinrai/contracts';
+import { evaluateOrderPolicy, steppingClock, systemClock } from '@shinrai/domain';
 import type { Config } from './config';
 import { ApiError } from './http';
 
@@ -30,6 +30,11 @@ const fixtureCtx = async (s: Services, tenantId: string, version: string, keyPre
     ids: uuidIds,
     clock: systemClock,
     keyPrefix,
+    // Real time for live runs; only scenarios that explicitly simulate a slow agent step the clock.
+    runClock: (sc: Scenario) =>
+      sc.clockStepSeconds > 1
+        ? steppingClock(systemClock.now(), sc.clockStepSeconds * 1000)
+        : systemClock,
   };
 };
 

@@ -44,37 +44,29 @@ export async function buildApp(
 
   app.setErrorHandler((err, req, reply) => {
     if (err instanceof ApiError) {
-      return reply
-        .status(err.status)
-        .send({
-          error: { code: err.code, message: err.message },
-          correlationId: req.correlationId,
-        });
+      return reply.status(err.status).send({
+        error: { code: err.code, message: err.message },
+        correlationId: req.correlationId,
+      });
     }
     const e = err as Error & { statusCode?: number };
     if (e.statusCode && e.statusCode >= 400 && e.statusCode < 500) {
-      return reply
-        .status(e.statusCode)
-        .send({
-          error: { code: 'BAD_REQUEST', message: e.message },
-          correlationId: req.correlationId,
-        });
-    }
-    req.log.error({ err, correlationId: req.correlationId }, 'unhandled error');
-    return reply
-      .status(500)
-      .send({
-        error: { code: 'INTERNAL', message: 'internal error' },
+      return reply.status(e.statusCode).send({
+        error: { code: 'BAD_REQUEST', message: e.message },
         correlationId: req.correlationId,
       });
+    }
+    req.log.error({ err, correlationId: req.correlationId }, 'unhandled error');
+    return reply.status(500).send({
+      error: { code: 'INTERNAL', message: 'internal error' },
+      correlationId: req.correlationId,
+    });
   });
   app.setNotFoundHandler((req, reply) =>
-    reply
-      .status(404)
-      .send({
-        error: { code: 'NOT_FOUND', message: `${req.method} ${req.url}` },
-        correlationId: req.correlationId,
-      }),
+    reply.status(404).send({
+      error: { code: 'NOT_FOUND', message: `${req.method} ${req.url}` },
+      correlationId: req.correlationId,
+    }),
   );
 
   queryRoutes(app, services);

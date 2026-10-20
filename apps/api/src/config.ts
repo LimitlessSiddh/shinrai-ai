@@ -2,7 +2,7 @@ import { z } from 'zod';
 import { Principal, Scope } from '@shinrai/contracts';
 
 const Env = z.object({
-  DATABASE_URL: z.string().default('postgres://shinrai:shinrai_local@localhost:5432/shinrai'),
+  DATABASE_URL: z.string().default('postgres://shinrai:shinrai_local@localhost:55432/shinrai'),
   NATS_URL: z.string().default('nats://localhost:4222'),
   API_PORT: z.coerce.number().int().positive().default(4000),
   WEB_ORIGIN: z.string().default('http://localhost:3000'),
@@ -16,6 +16,11 @@ const Env = z.object({
 });
 
 export type Config = ReturnType<typeof loadConfig>;
+
+/** Local-only identities used when no tokens are configured, so a fresh clone runs without a .env file. */
+export const LOCAL_DEFAULT_TOKENS =
+  'dev-operator-local-only=demo:operator:human:read|trade|resolve|replay|approve;' +
+  'dev-agent-research-local-only=demo:agent-research:agent:read';
 
 /** Scopes an agent principal may ever hold. Agents change state only through a gateway run. */
 const AGENT_SCOPES = new Set<Scope>(['read', 'agent']);
@@ -45,7 +50,9 @@ export function parseDevTokens(raw: string): Map<string, Principal> {
 
 export function loadConfig(env: NodeJS.ProcessEnv = process.env) {
   const e = Env.parse(env);
-  const tokens = parseDevTokens(e.SHINRAI_DEV_TOKENS);
+  const tokens = parseDevTokens(
+    e.SHINRAI_DEV_TOKENS || (e.SHINRAI_PROFILE === 'local' ? LOCAL_DEFAULT_TOKENS : ''),
+  );
   if (e.SHINRAI_PROFILE === 'aws' && tokens.size > 0) {
     throw new Error(
       'dev tokens are refused in the aws profile; configure a real identity provider',

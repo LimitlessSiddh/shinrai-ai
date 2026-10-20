@@ -11,7 +11,7 @@ const log = createLogger('worker');
 startTracing('shinrai-worker');
 
 const pool = createPool(
-  process.env.DATABASE_URL ?? 'postgres://shinrai:shinrai_local@localhost:5432/shinrai',
+  process.env.DATABASE_URL ?? 'postgres://shinrai:shinrai_local@localhost:55432/shinrai',
 );
 await migrate(pool);
 const bus = await JetStreamBus.connect(process.env.NATS_URL ?? 'nats://localhost:4222');

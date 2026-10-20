@@ -23,6 +23,8 @@ export type FixtureContext = {
   clock: Clock;
   /** Prefix for deterministic idempotency keys, e.g. `seed` or `replay`. */
   keyPrefix: string;
+  /** Clock for an agent run. Defaults to a deterministic stepping clock (replay); live runs pass the real clock. */
+  runClock?: (scenario: Scenario) => Clock;
 };
 
 export const fixtureEvidence = (fixture: Fixture): EvidenceSource => ({
