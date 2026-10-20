@@ -8,7 +8,7 @@ import type {
   Order,
   Position,
 } from '@shinrai/contracts';
-import { executeCommand, type CommandStore, type CommitInput } from './executor';
+import { executeCommand, type CommandStore, type CommitInput, type PolicyRecord } from './executor';
 import {
   applyTransaction,
   availableAccount,
@@ -62,11 +62,12 @@ export class InMemoryExchange implements Exchange {
     return t;
   }
 
-  async execute(command: Command): Promise<CommandResult> {
+  async execute(command: Command, policy?: PolicyRecord): Promise<CommandResult> {
     return executeCommand(command, {
       store: this.store(command.meta.actor.tenantId),
       ids: this.ids,
       clock: this.clock,
+      ...(policy ? { policy } : {}),
     });
   }
 

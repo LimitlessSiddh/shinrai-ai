@@ -44,6 +44,18 @@ export type CommitInput = {
   event: DomainEvent | null;
   result: CommandResult;
   rejection: Rejection | null;
+  policy: PolicyRecord;
+};
+
+/** The policy result recorded with every command in the audit log. */
+export type PolicyRecord = {
+  decision: 'approved' | 'blocked' | 'approval_required';
+  reasons: { code: string; message: string }[];
+};
+
+export const SYSTEM_POLICY: PolicyRecord = {
+  decision: 'approved',
+  reasons: [{ code: 'SYSTEM', message: 'system, seed or test command' }],
 };
 
 /** The persistence a command needs. Implementations must make `commit` atomic with every read. */
@@ -62,7 +74,12 @@ export interface CommandStore {
   commit(input: CommitInput): Promise<void>;
 }
 
-export type ExecutorDeps = { store: CommandStore; ids: IdSource; clock: Clock };
+export type ExecutorDeps = {
+  store: CommandStore;
+  ids: IdSource;
+  clock: Clock;
+  policy?: PolicyRecord;
+};
 
 /**
  * The single command path for humans, agents and replays:
@@ -71,6 +88,7 @@ export type ExecutorDeps = { store: CommandStore; ids: IdSource; clock: Clock };
  */
 export async function executeCommand(command: Command, deps: ExecutorDeps): Promise<CommandResult> {
   const { store, ids, clock } = deps;
+  const policy = deps.policy ?? SYSTEM_POLICY;
   const { meta, payload } = command;
   const scope = idempotencyScope(command);
   const requestFingerprint = canonicalJson(payload);
@@ -177,6 +195,7 @@ export async function executeCommand(command: Command, deps: ExecutorDeps): Prom
       event,
       result,
       rejection: decided.rejection,
+      policy,
     });
     return result;
   }
@@ -197,6 +216,7 @@ export async function executeCommand(command: Command, deps: ExecutorDeps): Prom
     event,
     result,
     rejection: null,
+    policy,
   });
   return result;
 }

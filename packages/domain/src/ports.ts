@@ -1,3 +1,4 @@
+import type { PolicyRecord } from './executor';
 import type {
   Command,
   CommandResult,
@@ -62,7 +63,7 @@ export type PortfolioView = {
 
 /** The command/query surface shared by the in-memory engine and the PostgreSQL adapter. */
 export interface Exchange {
-  execute(command: Command): Promise<CommandResult>;
+  execute(command: Command, policy?: PolicyRecord): Promise<CommandResult>;
   getMarket(tenantId: string, marketId: string): Promise<MarketView | null>;
   getPortfolio(tenantId: string, ownerId: string): Promise<PortfolioView>;
   events(tenantId: string): Promise<DomainEvent[]>;

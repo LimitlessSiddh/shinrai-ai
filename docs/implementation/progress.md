@@ -22,9 +22,9 @@ Legend: `[x]` verified by a command run locally · `[ ]` not done yet.
 
 ## Phase C — PostgreSQL and outbox
 
-- [ ] Migrations with DB constraints and append-only triggers
-- [ ] Serializable command transaction, advisory market lock, ordered account locks, retries
-- [ ] Concurrency, outbox, retry, settlement and no-mutation integration tests
+- [x] Migrations with DB constraints and append-only triggers (ledger balance maintained by trigger; deferred balanced-transaction check)
+- [x] Serializable command transaction, advisory market lock (try-lock, IMP-017), ordered account locks, retries
+- [x] Concurrency, outbox, retry, settlement and no-mutation integration tests: `pnpm test:integration` (stable over 3 consecutive runs)
 
 ## Phase D — Events, projections, replay
 
