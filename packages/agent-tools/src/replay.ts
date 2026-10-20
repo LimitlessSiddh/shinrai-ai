@@ -99,7 +99,9 @@ export async function runScenario(
       evidence: ctx.evidence,
       recorder: ctx.recorder,
       ids: ctx.ids,
-      clock: steppingClock(ctx.clock.now(), scenario.clockStepSeconds * 1000),
+      clock:
+        ctx.runClock?.(scenario) ??
+        steppingClock(ctx.clock.now(), scenario.clockStepSeconds * 1000),
     },
     policy,
     {
