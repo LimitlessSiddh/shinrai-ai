@@ -7,9 +7,10 @@
     ".": "./src/index.ts"
   },
   "dependencies": {
+    "@aws-sdk/client-eventbridge": "3.1154.0",
+    "@shinrai/agent-tools": "workspace:*",
     "@shinrai/contracts": "workspace:*",
     "@shinrai/domain": "workspace:*",
-    "@shinrai/agent-tools": "workspace:*",
     "@shinrai/observability": "workspace:*",
     "nats": "2.29.3",
     "pg": "8.23.1",

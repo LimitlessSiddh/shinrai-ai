@@ -51,7 +51,8 @@ Legend: `[x]` verified by a command run locally · `[ ]` not done yet.
 
 ## Phase H — AWS CDK (no deploy)
 
-- [ ] Demo stack, synth, cost-guardrail assertions
+- [x] Demo stack (S3+CloudFront, HTTP API + 4 Lambdas, EventBridge→SQS+DLQ, artifacts bucket, budgets, optional single-AZ RDS)
+- [x] `pnpm cdk:test` (18 assertions incl. forbidden primitives, tags, budgets, per-function roles) and `pnpm cdk:synth` with real bundling; **nothing deployed**
 
 ## CEO Summary — Plain English
 

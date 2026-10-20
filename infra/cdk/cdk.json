@@ -1,0 +1,8 @@
+{
+  "app": "npx tsx bin/app.ts",
+  "context": {
+    "environment": "demo",
+    "enableRds": "false",
+    "@aws-cdk/core:checkSecretUsage": true
+  }
+}

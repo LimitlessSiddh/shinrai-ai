@@ -1,0 +1,6 @@
+{
+  "extends": "../../tsconfig.base.json",
+  // aws-cdk-lib's declarations are not compatible with exactOptionalPropertyTypes; all other strict flags stay on.
+  "compilerOptions": { "exactOptionalPropertyTypes": false },
+  "include": ["bin", "lib", "test"]
+}

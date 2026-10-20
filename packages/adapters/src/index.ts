@@ -10,3 +10,4 @@ export * from './openai';
 export * from './fixtures';
 export * from './postgres/agent-records';
 export * from './replay';
+export * from './eventbridge';
