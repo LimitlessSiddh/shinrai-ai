@@ -1,5 +1,5 @@
 import { randomUUID } from 'node:crypto';
-import type { Command, CommandResult, DomainEvent } from '@shinrai/contracts';
+import type { Command, CommandResult, DomainEvent, LedgerTransaction } from '@shinrai/contracts';
 import {
   executeCommand,
   systemClock,
@@ -110,5 +110,28 @@ export class PostgresExchange implements Exchange {
       [tenantId],
     );
     return r.rows.map((x) => x.event);
+  }
+
+  async ledger(tenantId: string): Promise<LedgerTransaction[]> {
+    const r = await this.pool.query<{
+      tx_id: string;
+      reason: LedgerTransaction['reason'];
+      order_id: string | null;
+      entries: LedgerTransaction['entries'];
+    }>(
+      `SELECT t.tx_id, t.reason, t.order_id,
+              json_agg(json_build_object('accountId', e.account_id, 'direction', e.direction, 'amount', e.amount) ORDER BY e.entry_no) AS entries
+         FROM ledger_transactions t JOIN ledger_entries e USING (tenant_id, tx_id)
+        WHERE t.tenant_id = $1
+        GROUP BY t.tenant_id, t.tx_id, t.reason, t.order_id, t.seq
+        ORDER BY t.seq`,
+      [tenantId],
+    );
+    return r.rows.map((x) => ({
+      txId: x.tx_id,
+      reason: x.reason,
+      orderId: x.order_id,
+      entries: x.entries,
+    }));
   }
 }

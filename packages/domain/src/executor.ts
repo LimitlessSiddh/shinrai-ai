@@ -263,3 +263,13 @@ export function envelope(
     ...draft,
   } as DomainEvent;
 }
+
+/** 64-bit FNV-1a over canonical JSON: a stable, dependency-free fingerprint for replay comparison. */
+export function fingerprint(value: unknown): string {
+  let h = 0xcbf29ce484222325n;
+  for (const ch of new TextEncoder().encode(canonicalJson(value))) {
+    h ^= BigInt(ch);
+    h = (h * 0x100000001b3n) & 0xffffffffffffffffn;
+  }
+  return h.toString(16).padStart(16, '0');
+}

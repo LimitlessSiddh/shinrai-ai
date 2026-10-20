@@ -6,3 +6,7 @@ export * from './postgres/queries';
 export * from './postgres/projector';
 export * from './nats/bus';
 export * from './worker';
+export * from './openai';
+export * from './fixtures';
+export * from './postgres/agent-records';
+export * from './replay';

@@ -149,6 +149,8 @@ CREATE TABLE ledger_transactions (
   event_id       text NOT NULL,
   correlation_id text NOT NULL,
   created_at     timestamptz NOT NULL,
+  -- commit order, for equity curves and replay comparison
+  seq            bigserial NOT NULL UNIQUE,
   PRIMARY KEY (tenant_id, tx_id),
   FOREIGN KEY (tenant_id, order_id) REFERENCES orders
 );

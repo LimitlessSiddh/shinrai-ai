@@ -104,10 +104,6 @@ importers:
       zod:
         specifier: 4.6.7
         version: 4.6.7
-    optionalDependencies:
-      '@openai/agents':
-        specifier: 0.20.0
-        version: 0.20.0(undici@8.12.3)(ws@8.22.0)(zod@4.6.7)
 
   apps/web:
     dependencies:
@@ -188,6 +184,10 @@ importers:
       zod:
         specifier: 4.6.7
         version: 4.6.7
+    optionalDependencies:
+      '@openai/agents':
+        specifier: 0.20.0
+        version: 0.20.0(undici@8.12.3)(ws@8.22.0)(zod@4.6.7)
 
   packages/agent-tools:
     dependencies:

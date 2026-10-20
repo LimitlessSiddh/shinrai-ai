@@ -3,6 +3,7 @@ import type {
   Command,
   CommandResult,
   DomainEvent,
+  LedgerTransaction,
   Market,
   Order,
   Position,
@@ -67,6 +68,8 @@ export interface Exchange {
   getMarket(tenantId: string, marketId: string): Promise<MarketView | null>;
   getPortfolio(tenantId: string, ownerId: string): Promise<PortfolioView>;
   events(tenantId: string): Promise<DomainEvent[]>;
+  /** Ledger transactions in commit order. */
+  ledger(tenantId: string): Promise<LedgerTransaction[]>;
 }
 
 /** Durable at-least-once event transport. Consumers must be idempotent. */

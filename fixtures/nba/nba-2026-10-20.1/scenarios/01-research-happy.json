@@ -1,0 +1,42 @@
+{
+  "scenarioId": "research-happy",
+  "agentId": "agent-research",
+  "title": "Research, cite evidence, request a bounded order",
+  "description": "Reads the market and rules, checks its paper portfolio, retrieves two pieces of evidence and requests BUY YES 50 @ 58 within policy.",
+  "steps": [
+    { "kind": "tool", "tool": "getMarket", "args": { "marketId": "nba-2026-10-20-bos-nyk" } },
+    { "kind": "tool", "tool": "getRules", "args": { "marketId": "nba-2026-10-20-bos-nyk" } },
+    { "kind": "tool", "tool": "getPortfolio", "args": {} },
+    {
+      "kind": "tool",
+      "tool": "searchEvidence",
+      "args": { "marketId": "nba-2026-10-20-bos-nyk", "query": "injury" }
+    },
+    {
+      "kind": "tool",
+      "tool": "searchEvidence",
+      "args": { "marketId": "nba-2026-10-20-bos-nyk", "query": "form" }
+    },
+    {
+      "kind": "tool",
+      "tool": "requestOrder",
+      "args": {
+        "marketId": "nba-2026-10-20-bos-nyk",
+        "outcome": "YES",
+        "price": 58,
+        "quantity": 50,
+        "probabilityYes": 0.64,
+        "rationale": "NYK starter questionable and BOS strong recent form; 64% fair value vs 58 market price.",
+        "evidenceIds": ["ev-nyk-injury-0001", "ev-bos-form-0002"]
+      }
+    },
+    {
+      "kind": "conclude",
+      "conclusion": {
+        "probabilityYes": 0.64,
+        "thesis": "BUY YES: two strong signals (NYK starter questionable, BOS 7-3 last ten) outweigh home court.",
+        "evidenceIds": ["ev-nyk-injury-0001", "ev-bos-form-0002"]
+      }
+    }
+  ]
+}

@@ -156,6 +156,10 @@ export class InMemoryExchange implements Exchange {
   async events(tenantId: string): Promise<DomainEvent[]> {
     return [...this.tenant(tenantId).events];
   }
+
+  async ledger(tenantId: string): Promise<LedgerTransaction[]> {
+    return [...this.tenant(tenantId).ledger];
+  }
 }
 
 /** Shared projection of a market's book; used by both adapters so views agree. */

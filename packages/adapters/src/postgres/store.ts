@@ -245,15 +245,10 @@ export class PgCommandStore implements CommandStore {
         );
       }
       for (const tx of decision.ledger) {
-        await q('INSERT INTO ledger_transactions VALUES ($1, $2, $3, $4, $5, $6, $7)', [
-          tenantId,
-          tx.txId,
-          tx.reason,
-          tx.orderId,
-          eventId,
-          correlationId,
-          event.occurredAt,
-        ]);
+        await q(
+          'INSERT INTO ledger_transactions (tenant_id, tx_id, reason, order_id, event_id, correlation_id, created_at) VALUES ($1, $2, $3, $4, $5, $6, $7)',
+          [tenantId, tx.txId, tx.reason, tx.orderId, eventId, correlationId, event.occurredAt],
+        );
         for (const [i, e] of tx.entries.entries()) {
           await q('INSERT INTO ledger_entries VALUES ($1, $2, $3, $4, $5, $6)', [
             tenantId,

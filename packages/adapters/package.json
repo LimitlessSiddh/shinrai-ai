@@ -14,5 +14,8 @@
     "nats": "2.29.3",
     "pg": "8.23.1",
     "zod": "4.6.7"
+  },
+  "optionalDependencies": {
+    "@openai/agents": "0.20.0"
   }
 }

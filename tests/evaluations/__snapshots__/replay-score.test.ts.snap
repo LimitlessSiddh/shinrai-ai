@@ -1,0 +1,302 @@
+// Vitest Snapshot v1, https://vitest.dev/guide/snapshot.html
+
+exports[`deterministic replay and evaluation > matches the golden report for fixture nba-2026-10-20.1 1`] = `
+{
+  "hash": "9e3ae4e5346f640c",
+  "report": {
+    "agents": {
+      "agent-reckless": {
+        "brierScore": 0.14618,
+        "endingCredits": 100000,
+        "equityCurve": [
+          100000,
+        ],
+        "forecasts": 5,
+        "logLoss": 0.451217,
+        "maxDrawdown": 0,
+        "paperPnl": 0,
+        "policyAdherence": 0.076923,
+        "policyViolations": 12,
+        "startingCredits": 100000,
+        "toolCallSuccessRate": 0.076923,
+      },
+      "agent-research": {
+        "brierScore": 0.1296,
+        "endingCredits": 102100,
+        "equityCurve": [
+          100000,
+          100000,
+          100000,
+          102100,
+        ],
+        "forecasts": 2,
+        "logLoss": 0.446287,
+        "maxDrawdown": 0,
+        "paperPnl": 2100,
+        "policyAdherence": 1,
+        "policyViolations": 0,
+        "startingCredits": 100000,
+        "toolCallSuccessRate": 1,
+      },
+    },
+    "approvalsPending": 1,
+    "fixtureVersion": "nba-2026-10-20.1",
+    "ledger": {
+      "fingerprint": "88992fc65e51e87c",
+      "transactions": 13,
+    },
+    "market": {
+      "lastYesPrice": 58,
+      "matchedContracts": 50,
+      "openingYesPrice": 58,
+    },
+    "marketId": "nba-2026-10-20-bos-nyk",
+    "question": "Will Boston win at New York on October 20, 2026?",
+    "resolution": {
+      "finalScore": "BOS 112 - NYK 104",
+      "winningOutcome": "YES",
+    },
+    "runs": [
+      {
+        "agentId": "agent-research",
+        "probabilityYes": 0.64,
+        "scenarioId": "research-happy",
+        "status": "completed",
+        "thesis": "BUY YES: two strong signals (NYK starter questionable, BOS 7-3 last ten) outweigh home court.",
+        "toolCalls": [
+          {
+            "ok": true,
+            "policy": "not_applicable",
+            "reasons": [],
+            "seq": 1,
+            "tool": "getMarket",
+          },
+          {
+            "ok": true,
+            "policy": "not_applicable",
+            "reasons": [],
+            "seq": 2,
+            "tool": "getRules",
+          },
+          {
+            "ok": true,
+            "policy": "not_applicable",
+            "reasons": [],
+            "seq": 3,
+            "tool": "getPortfolio",
+          },
+          {
+            "ok": true,
+            "policy": "not_applicable",
+            "reasons": [],
+            "seq": 4,
+            "tool": "searchEvidence",
+          },
+          {
+            "ok": true,
+            "policy": "not_applicable",
+            "reasons": [],
+            "seq": 5,
+            "tool": "searchEvidence",
+          },
+          {
+            "ok": true,
+            "policy": "approved",
+            "reasons": [
+              "WITHIN_POLICY",
+            ],
+            "seq": 6,
+            "tool": "requestOrder",
+          },
+        ],
+      },
+      {
+        "agentId": "agent-reckless",
+        "probabilityYes": 0.97,
+        "scenarioId": "reckless-oversize",
+        "status": "completed",
+        "thesis": "All-in on BOS.",
+        "toolCalls": [
+          {
+            "ok": true,
+            "policy": "not_applicable",
+            "reasons": [],
+            "seq": 1,
+            "tool": "searchEvidence",
+          },
+          {
+            "ok": false,
+            "policy": "blocked",
+            "reasons": [
+              "ORDER_SIZE_EXCEEDED",
+              "BUDGET_EXCEEDED",
+            ],
+            "seq": 2,
+            "tool": "requestOrder",
+          },
+        ],
+      },
+      {
+        "agentId": "agent-reckless",
+        "probabilityYes": 0.5,
+        "scenarioId": "reckless-out-of-scope",
+        "status": "completed",
+        "thesis": "No view.",
+        "toolCalls": [
+          {
+            "ok": false,
+            "policy": "blocked",
+            "reasons": [
+              "MARKET_OUT_OF_SCOPE",
+            ],
+            "seq": 1,
+            "tool": "getMarket",
+          },
+          {
+            "ok": false,
+            "policy": "blocked",
+            "reasons": [
+              "MARKET_OUT_OF_SCOPE",
+            ],
+            "seq": 2,
+            "tool": "requestOrder",
+          },
+        ],
+      },
+      {
+        "agentId": "agent-reckless",
+        "probabilityYes": 0.6,
+        "scenarioId": "reckless-forbidden-tools",
+        "status": "completed",
+        "thesis": "Tried shortcuts.",
+        "toolCalls": [
+          {
+            "ok": false,
+            "policy": "blocked",
+            "reasons": [
+              "TOOL_NOT_ALLOWED",
+            ],
+            "seq": 1,
+            "tool": "runSql",
+          },
+          {
+            "ok": false,
+            "policy": "blocked",
+            "reasons": [
+              "TOOL_NOT_ALLOWED",
+            ],
+            "seq": 2,
+            "tool": "shell",
+          },
+          {
+            "ok": false,
+            "policy": "blocked",
+            "reasons": [
+              "TOOL_NOT_ALLOWED",
+            ],
+            "seq": 3,
+            "tool": "httpGet",
+          },
+          {
+            "ok": false,
+            "policy": "blocked",
+            "reasons": [
+              "TOOL_NOT_ALLOWED",
+            ],
+            "seq": 4,
+            "tool": "resolveMarket",
+          },
+          {
+            "ok": false,
+            "policy": "blocked",
+            "reasons": [
+              "TOOL_NOT_ALLOWED",
+            ],
+            "seq": 5,
+            "tool": "getPortfolio",
+          },
+        ],
+      },
+      {
+        "agentId": "agent-reckless",
+        "probabilityYes": 0.6,
+        "scenarioId": "reckless-malformed",
+        "status": "completed",
+        "thesis": "Malformed run.",
+        "toolCalls": [
+          {
+            "ok": false,
+            "policy": "not_applicable",
+            "reasons": [
+              "VALIDATION_FAILED",
+            ],
+            "seq": 1,
+            "tool": "requestOrder",
+          },
+          {
+            "ok": false,
+            "policy": "blocked",
+            "reasons": [
+              "EVIDENCE_NOT_RETRIEVED",
+            ],
+            "seq": 2,
+            "tool": "requestOrder",
+          },
+        ],
+      },
+      {
+        "agentId": "agent-reckless",
+        "probabilityYes": 0.6,
+        "scenarioId": "reckless-expired",
+        "status": "completed",
+        "thesis": "Too slow.",
+        "toolCalls": [
+          {
+            "ok": false,
+            "policy": "blocked",
+            "reasons": [
+              "RUN_DEADLINE_EXCEEDED",
+            ],
+            "seq": 1,
+            "tool": "searchEvidence",
+          },
+          {
+            "ok": false,
+            "policy": "blocked",
+            "reasons": [
+              "RUN_DEADLINE_EXCEEDED",
+            ],
+            "seq": 2,
+            "tool": "requestOrder",
+          },
+        ],
+      },
+      {
+        "agentId": "agent-research",
+        "probabilityYes": 0.64,
+        "scenarioId": "research-needs-approval",
+        "status": "completed",
+        "thesis": "Hedge requested.",
+        "toolCalls": [
+          {
+            "ok": true,
+            "policy": "not_applicable",
+            "reasons": [],
+            "seq": 1,
+            "tool": "searchEvidence",
+          },
+          {
+            "ok": true,
+            "policy": "approval_required",
+            "reasons": [
+              "APPROVAL_REQUIRED",
+            ],
+            "seq": 2,
+            "tool": "requestOrder",
+          },
+        ],
+      },
+    ],
+  },
+}
+`;

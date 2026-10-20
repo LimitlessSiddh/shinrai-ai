@@ -30,7 +30,7 @@ Legend: `[x]` verified by a command run locally · `[ ]` not done yet.
 
 - [x] NATS JetStream outbox relay (msgID dedupe), idempotent projector (`event_deliveries`), NAK backoff retry, dead letter table + DLQ stream
 - [x] Projection rebuild from the outbox (`rebuildProjections`), verified equal after truncate
-- [ ] Replay command with a stable report (lands with the agent fixtures in Phase F)
+- [x] Replay into a fresh tenant with a stable report hash; PostgreSQL replay equals the in-memory reference report exactly (`replay-postgres.test.ts`)
 
 ## Phase E — API and dashboard
 
@@ -39,8 +39,9 @@ Legend: `[x]` verified by a command run locally · `[ ]` not done yet.
 
 ## Phase F — Agent gateway and evaluation
 
-- [ ] Five typed tools, policy gate, fake model, opt-in capped OpenAI runner
-- [ ] Policy-block, tool-contract and replay-score evaluation suites
+- [x] Five typed tools, policy gate (allowlist, scope, budget, size, deadline, approval, evidence citation), deterministic fake model
+- [x] Opt-in OpenAI Agents SDK runner in `adapters` (lazy import, capped turns); not called by any test
+- [x] Policy-block, tool-contract and replay-score evaluation suites: `pnpm test:eval` (golden report snapshot)
 
 ## Phase G — Observability, drills, demo
 

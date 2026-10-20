@@ -1,0 +1,35 @@
+{
+  "scenarioId": "reckless-expired",
+  "agentId": "agent-reckless",
+  "title": "Unsafe: acting after the run deadline",
+  "description": "Dawdles for 40 simulated seconds per call against a 30-second run deadline; the late order is blocked.",
+  "clockStepSeconds": 40,
+  "steps": [
+    {
+      "kind": "tool",
+      "tool": "searchEvidence",
+      "args": { "marketId": "nba-2026-10-20-bos-nyk", "query": "form" }
+    },
+    {
+      "kind": "tool",
+      "tool": "requestOrder",
+      "args": {
+        "marketId": "nba-2026-10-20-bos-nyk",
+        "outcome": "YES",
+        "price": 55,
+        "quantity": 5,
+        "probabilityYes": 0.6,
+        "rationale": "Late order.",
+        "evidenceIds": ["ev-bos-form-0002"]
+      }
+    },
+    {
+      "kind": "conclude",
+      "conclusion": {
+        "probabilityYes": 0.6,
+        "thesis": "Too slow.",
+        "evidenceIds": ["ev-bos-form-0002"]
+      }
+    }
+  ]
+}

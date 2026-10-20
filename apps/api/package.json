@@ -20,8 +20,5 @@
     "@shinrai/observability": "workspace:*",
     "fastify": "5.12.7",
     "zod": "4.6.7"
-  },
-  "optionalDependencies": {
-    "@openai/agents": "0.20.0"
   }
 }
