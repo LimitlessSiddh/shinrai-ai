@@ -76,7 +76,7 @@ Legend: `[x]` verified by a command run locally · `[ ]` not done yet.
 
 ## Open follow-ups for Siddh
 
-- `.env.example` still says `localhost:5432` and gives `agent-maker` a `trade` scope. My tool permissions blocked editing `.env*` files. Change the port to `55432`. The API already clamps agent scopes, so the second item is cosmetic.
+- [x] `.env.example` now points at port 55432 and no longer ships an agent token with `trade` scope (fixed by Siddh).
 - Hosted authentication is not implemented (IMP-021).
 - The Polymarket adapter is deferred.
 - The branch has not been pushed.
@@ -89,7 +89,7 @@ Legend: `[x]` verified by a command run locally · `[ ]` not done yet.
 - **ON:** local app, dashboard (3 screens, works on phones, keyboard-accessible), fake AI, fake money, GitHub checks, and the AWS blueprint (generated only).
 - **OFF:** real money, real AI calls (opt-in switch exists but is off), AWS deployment (nothing is running or costing money), live sports data, and Polymarket.
 - **Your decisions:**
-  1. Fix two values in `.env.example` (I couldn't edit that file).
+  1. ~~Fix two values in `.env.example`~~ done.
   2. Push the branch and open a pull request?
   3. Ever deploy a short AWS demo? That needs your explicit go-ahead.
   4. Ever enable a real AI model with a spending cap?
