@@ -22,14 +22,19 @@ export const REDACT_PATHS = [
   '*.OPENAI_API_KEY',
 ];
 
-export function createLogger(service: string, level = process.env.LOG_LEVEL ?? 'info'): Logger {
-  return pino({
+/** Pino options shared by every service; Fastify takes these directly. */
+export function loggerOptions(service: string, level = process.env.LOG_LEVEL ?? 'info') {
+  return {
     name: service,
     level,
     redact: { paths: REDACT_PATHS, censor: '[REDACTED]' },
     base: { service },
     timestamp: pino.stdTimeFunctions.isoTime,
-  });
+  };
+}
+
+export function createLogger(service: string, level?: string): Logger {
+  return pino(loggerOptions(service, level));
 }
 
 let started = false;

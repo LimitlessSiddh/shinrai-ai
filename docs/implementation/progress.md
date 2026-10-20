@@ -34,7 +34,7 @@ Legend: `[x]` verified by a command run locally · `[ ]` not done yet.
 
 ## Phase E — API and dashboard
 
-- [ ] Typed Fastify API with scopes and correlation IDs
+- [x] Typed Fastify API: scoped bearer principals (agents clamped to read-only), correlation id on every response/header, typed 4xx domain errors, no DB route (`tests/integration/api.test.ts`)
 - [ ] Market, Dossier and Replay Proof views on live API data
 
 ## Phase F — Agent gateway and evaluation
