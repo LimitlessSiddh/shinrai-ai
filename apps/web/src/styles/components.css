@@ -372,7 +372,8 @@ legend {
   font-weight: 500;
   letter-spacing: 0.06em;
   text-transform: uppercase;
-  color: var(--color-text-secondary);
+  /* Headers sit on a raised surface; use the primary ink to retain WCAG contrast. */
+  color: var(--color-text-primary);
 }
 .table tbody tr {
   transition: background var(--motion-fast);
@@ -385,6 +386,10 @@ legend {
 }
 .table .num {
   text-align: right;
+}
+.table .faint {
+  /* Table metadata must remain readable against alternating row surfaces. */
+  color: var(--color-text-primary);
 }
 tr.clickable {
   position: relative;
