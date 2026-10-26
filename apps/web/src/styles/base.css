@@ -91,13 +91,13 @@ table {
   font-weight: 500;
   letter-spacing: 0.08em;
   text-transform: uppercase;
-  color: var(--color-text-secondary);
+  color: var(--color-text-primary);
 }
 .muted {
-  color: var(--color-text-secondary);
+  color: var(--color-text-primary);
 }
 .faint {
-  color: var(--color-text-secondary);
+  color: var(--color-text-primary);
 }
 .wrap-any {
   overflow-wrap: anywhere;

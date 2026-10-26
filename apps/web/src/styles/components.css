@@ -190,6 +190,9 @@
   color: var(--color-success);
   background: var(--tint-success);
 }
+.tone-success > span {
+  color: var(--color-text-primary);
+}
 .tone-warning {
   color: var(--color-warning);
   background: var(--tint-warning);
