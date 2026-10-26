@@ -99,7 +99,7 @@ Legend: `[x]` verified by a command run locally · `[ ]` not done yet.
 | Manual demo and replay | demo pass; two replay reports matched hash `9e3ae4e5346f640c` |
 
 - The command palette shortcut now always opens (rather than toggles) the palette; its keyboard flow passed ten repeated cold browser runs before the final E2E pass.
-- Next: push `v1-implementation` and open a PR to `main`; do not merge until it has been reviewed.
+- Pull request [#1](https://github.com/LimitlessSiddh/shinrai-ai/pull/1) is open from `v1-implementation` to `main`; do not merge until it has been reviewed.
 - This release stays local-first and paper-only: deployment, hosted identity, real model calls, live data and Polymarket remain out of scope.
 
 ## Intentional exclusions
