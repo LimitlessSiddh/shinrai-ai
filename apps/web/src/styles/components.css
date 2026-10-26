@@ -198,6 +198,10 @@
   color: var(--color-danger);
   background: var(--tint-danger);
 }
+/* Keep the danger icon red, but use full-contrast copy inside the translucent status surface. */
+.tone-danger > span {
+  color: var(--color-text-primary);
+}
 .tone-neutral {
   color: var(--color-text-secondary);
   background: var(--tint-steel);
