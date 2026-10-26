@@ -1,7 +1,7 @@
 # Shinrai AI UI system — Stealth Signal
 
-**Status:** Approved build direction  
-**Figma source:** [editable premium mockups](https://www.figma.com/design/yKUP7eyOfsg4Gzs9x44TPZ)  
+**Status:** Approved build direction
+**Figma source:** [editable premium mockups](https://www.figma.com/design/yKUP7eyOfsg4Gzs9x44TPZ)
 **Audience:** Operators evaluating an NBA paper-market agent; this is not a consumer betting interface.
 
 ## The design idea

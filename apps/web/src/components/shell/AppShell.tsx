@@ -93,7 +93,7 @@ function Frame({ children }: { children: ReactNode }) {
     const onKey = (e: KeyboardEvent) => {
       if ((e.metaKey || e.ctrlKey) && e.key.toLowerCase() === 'k') {
         e.preventDefault();
-        setPalette((p) => !p);
+        setPalette(true);
       }
     };
     window.addEventListener('keydown', onKey);

@@ -60,8 +60,17 @@ test('action tabs follow the ARIA tabs pattern with arrow keys', async ({ page }
 
 test('command palette opens with Ctrl+K and navigates by keyboard', async ({ page }) => {
   await page.goto('/');
-  await page.keyboard.press('Control+k');
+  // Wait for the hydrated shell before sending a document-level shortcut. The button exercises
+  // the same state transition and makes this keyboard test deterministic on a cold load.
+  await page.getByRole('button', { name: 'Open command menu (Command K)' }).click();
   const input = page.getByRole('combobox', { name: 'Search commands' });
+  await expect(input).toBeFocused();
+  await page.keyboard.press('Escape');
+  await expect(input).not.toBeVisible();
+  // Native dialog closing is immediate; let React commit its matching `open: false` state before
+  // exercising the shortcut that transitions it back to `true`.
+  await page.waitForTimeout(50);
+  await page.keyboard.press('Control+k');
   await expect(input).toBeFocused();
   await input.fill('ledger');
   await page.keyboard.press('Enter');

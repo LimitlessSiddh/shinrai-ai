@@ -47,6 +47,16 @@ The dashboard is an operator console: a sidebar on desktop and a bottom tab bar 
 
 Screenshots of all six views at 1440px and 390px: [`docs/demo/screenshots/`](docs/demo/screenshots/).
 
+## Resume-ready engineering highlights
+
+- Built a constrained AI-agent workflow in which five typed tools, fixed budgets, evidence citations and human approval gates are enforced before a paper order can reach the exchange.
+- Built a deterministic exchange core with price-time matching, integer credit-cents, reservations, balanced double-entry ledger postings, idempotency and exactly-once settlement.
+- Made failures inspectable and safe to retry with PostgreSQL `SERIALIZABLE` transactions, transactional outbox events, JetStream deduplication, idempotent projections and dead-letter handling.
+- Made agent behavior reproducible with versioned fixtures, deterministic replay, calibration/economic/policy metrics and stable report hashes.
+- Shipped an accessible Next.js operator console with a full correlation trace from evidence through policy, ledger and events; verified with unit, integration, evaluation and Playwright accessibility suites.
+
+For interviews, the useful framing is: _Shinrai is not a sports-prediction product. It is the reliable, auditable system around a constrained agent decision._
+
 ## Commands
 
 | Command                                              | What it runs                                                                                                                                                                                   |
