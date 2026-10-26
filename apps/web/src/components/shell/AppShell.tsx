@@ -201,7 +201,9 @@ function Frame({ children }: { children: ReactNode }) {
               ) : null}
             </div>
             <div className="topbar-actions">
-              <MarketChip />
+              <div className="topbar-market">
+                <MarketChip />
+              </div>
               <button
                 type="button"
                 className="btn btn-sm"

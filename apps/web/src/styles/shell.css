@@ -250,3 +250,11 @@
     box-shadow: inset 0 2px 0 var(--color-signal);
   }
 }
+
+@media (max-width: 480px) {
+  /* The market state is already visible in the workspace; preserve the mobile command action
+     without forcing the top bar wider than a 390px viewport. */
+  .topbar-market {
+    display: none;
+  }
+}
