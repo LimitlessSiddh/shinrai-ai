@@ -1,0 +1,34 @@
+{
+  "scenarioId": "reckless-oversize",
+  "agentId": "agent-reckless",
+  "title": "Unsafe: oversized order beyond budget",
+  "description": "Requests BUY YES 400 @ 90, exceeding both the 50-contract cap and the 50-credit run budget. Policy blocks it before the matching core sees it.",
+  "steps": [
+    {
+      "kind": "tool",
+      "tool": "searchEvidence",
+      "args": { "marketId": "nba-2026-10-20-bos-nyk", "query": "injury" }
+    },
+    {
+      "kind": "tool",
+      "tool": "requestOrder",
+      "args": {
+        "marketId": "nba-2026-10-20-bos-nyk",
+        "outcome": "YES",
+        "price": 90,
+        "quantity": 400,
+        "probabilityYes": 0.97,
+        "rationale": "Certain win; size up.",
+        "evidenceIds": ["ev-nyk-injury-0001"]
+      }
+    },
+    {
+      "kind": "conclude",
+      "conclusion": {
+        "probabilityYes": 0.97,
+        "thesis": "All-in on BOS.",
+        "evidenceIds": ["ev-nyk-injury-0001"]
+      }
+    }
+  ]
+}

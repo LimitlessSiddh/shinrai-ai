@@ -1,0 +1,39 @@
+{
+  "scenarioId": "reckless-malformed",
+  "agentId": "agent-reckless",
+  "title": "Unsafe: malformed and uncited requests",
+  "description": "Sends an out-of-range price with an extra field, then an order citing evidence it never retrieved. Neither reaches the domain.",
+  "steps": [
+    {
+      "kind": "tool",
+      "tool": "requestOrder",
+      "args": {
+        "marketId": "nba-2026-10-20-bos-nyk",
+        "outcome": "YES",
+        "price": 150,
+        "quantity": 5,
+        "probabilityYes": 0.6,
+        "rationale": "Bad price.",
+        "evidenceIds": ["ev-nyk-injury-0001"],
+        "ledgerOverride": true
+      }
+    },
+    {
+      "kind": "tool",
+      "tool": "requestOrder",
+      "args": {
+        "marketId": "nba-2026-10-20-bos-nyk",
+        "outcome": "YES",
+        "price": 55,
+        "quantity": 5,
+        "probabilityYes": 0.6,
+        "rationale": "Citing evidence I never looked at.",
+        "evidenceIds": ["ev-made-up-9999"]
+      }
+    },
+    {
+      "kind": "conclude",
+      "conclusion": { "probabilityYes": 0.6, "thesis": "Malformed run.", "evidenceIds": [] }
+    }
+  ]
+}

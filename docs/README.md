@@ -1,6 +1,6 @@
 # Project Documentation
 
-This folder is the project foundation for an agent-native, paper-trading prediction-market sandbox. It intentionally contains planning, research, a final V1 architecture, an implementation roadmap, and a printable system diagram. Application code, dependency manifests, and infrastructure configuration are intentionally not created yet.
+This folder holds the product, research, architecture and plan documents that V1 was built from, plus the implementation notes under [`implementation/`](implementation/).
 
 ## Read in this order
 
@@ -11,6 +11,8 @@ This folder is the project foundation for an agent-native, paper-trading predict
 5. [Implementation plan](plans/2026-10-19-mvp-implementation-plan.md) — the test-first build order.
 6. [Printable architecture checkpoint](architecture/2026-10-19-nba-agent-market-sandbox-architecture-print.pdf) — notebook-ready diagram and summary.
 7. [Discovery and MVP plan](plans/2026-10-19-discovery-and-mvp-plan.md) — the original staged discovery record.
+8. [Stealth Signal UI system](design/2026-10-20-stealth-signal-ui-system.md) — the dashboard's design rules.
+9. [Implementation notes](implementation/) — decisions, progress, architecture map, testing, safety and cost, demo walkthrough.
 
 ## Current checkpoint
 
@@ -20,4 +22,4 @@ This folder is the project foundation for an agent-native, paper-trading predict
 
 **Hard boundary:** No real-money wagering, custody, wallet management, exchange order placement, gambling advice, or production trading integration.
 
-**Status:** V1 architecture approved and documented. The project is deliberately still documentation-only, ready for a Git repository and the Phase 0 implementation session.
+**Status:** V1 is implemented and runs locally; see [implementation progress](implementation/progress.md) and the root [README](../README.md). The AWS profile is synth-only and has not been deployed.

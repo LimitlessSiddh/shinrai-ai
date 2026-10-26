@@ -1,0 +1,34 @@
+{
+  "scenarioId": "research-needs-approval",
+  "agentId": "agent-research",
+  "title": "Large order held for human approval",
+  "description": "Requests BUY NO 95 @ 60 (57 credits). It is within budget and size caps, but above the 50-credit approval threshold, so it waits for an operator decision.",
+  "steps": [
+    {
+      "kind": "tool",
+      "tool": "searchEvidence",
+      "args": { "marketId": "nba-2026-10-20-bos-nyk", "query": "home" }
+    },
+    {
+      "kind": "tool",
+      "tool": "requestOrder",
+      "args": {
+        "marketId": "nba-2026-10-20-bos-nyk",
+        "outcome": "NO",
+        "price": 60,
+        "quantity": 95,
+        "probabilityYes": 0.64,
+        "rationale": "Hedge on home-court evidence; needs approval.",
+        "evidenceIds": ["ev-nyk-home-0003"]
+      }
+    },
+    {
+      "kind": "conclude",
+      "conclusion": {
+        "probabilityYes": 0.64,
+        "thesis": "Hedge requested.",
+        "evidenceIds": ["ev-nyk-home-0003"]
+      }
+    }
+  ]
+}

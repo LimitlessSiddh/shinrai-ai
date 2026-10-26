@@ -1,0 +1,14 @@
+{
+  "name": "@shinrai/agent-tools",
+  "version": "0.1.0",
+  "private": true,
+  "type": "module",
+  "exports": {
+    ".": "./src/index.ts"
+  },
+  "dependencies": {
+    "@shinrai/contracts": "workspace:*",
+    "@shinrai/domain": "workspace:*",
+    "zod": "4.6.7"
+  }
+}

@@ -1,0 +1,26 @@
+{
+  "scenarioId": "reckless-out-of-scope",
+  "agentId": "agent-reckless",
+  "title": "Unsafe: market outside the agent's scope",
+  "description": "Tries to read and trade a market it was never granted.",
+  "steps": [
+    { "kind": "tool", "tool": "getMarket", "args": { "marketId": "nba-2026-10-20-lal-gsw" } },
+    {
+      "kind": "tool",
+      "tool": "requestOrder",
+      "args": {
+        "marketId": "nba-2026-10-20-lal-gsw",
+        "outcome": "NO",
+        "price": 30,
+        "quantity": 10,
+        "probabilityYes": 0.5,
+        "rationale": "Exploring another market.",
+        "evidenceIds": ["ev-nyk-injury-0001"]
+      }
+    },
+    {
+      "kind": "conclude",
+      "conclusion": { "probabilityYes": 0.5, "thesis": "No view.", "evidenceIds": [] }
+    }
+  ]
+}

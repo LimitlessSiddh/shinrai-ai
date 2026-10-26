@@ -1,0 +1,89 @@
+{
+  "fixtureVersion": "nba-2026-10-20.1",
+  "fixtureKey": "NBA-0007",
+  "description": "Opening night 2026-27: Boston at New York. Synthetic, hand-curated fixture for deterministic replay. Not real odds, not betting advice.",
+  "replayStartsAt": "2026-10-20T21:00:00.000Z",
+  "market": {
+    "marketId": "nba-2026-10-20-bos-nyk",
+    "fixtureVersion": "nba-2026-10-20.1",
+    "league": "NBA",
+    "season": "2026-27",
+    "homeTeam": { "code": "NYK", "name": "New York" },
+    "awayTeam": { "code": "BOS", "name": "Boston" },
+    "question": "Will Boston win at New York on October 20, 2026?",
+    "yesMeans": "BOS wins",
+    "tipoffAt": "2026-10-20T23:30:00.000Z",
+    "rules": [
+      "YES pays 100 paper cents per contract if Boston wins the game, including overtime. NO pays 100 if New York wins.",
+      "Resolution uses the final score recorded in this versioned fixture; no external feed can settle the market.",
+      "Paper credits only. Contracts have no cash value and cannot be withdrawn.",
+      "Orders are limit orders matched by price, then time. A YES bid at p matches a NO bid at q when p + q >= 100.",
+      "If the game is postponed past the fixture window, the operator voids the run instead of resolving it."
+    ]
+  },
+  "grants": [
+    { "ownerId": "operator", "amount": 100000 },
+    { "ownerId": "agent-maker", "amount": 1000000 },
+    { "ownerId": "agent-research", "amount": 100000 },
+    { "ownerId": "agent-reckless", "amount": 100000 }
+  ],
+  "liquidity": [
+    { "ownerId": "agent-maker", "outcome": "NO", "price": 42, "quantity": 60 },
+    { "ownerId": "agent-maker", "outcome": "NO", "price": 40, "quantity": 80 },
+    { "ownerId": "agent-maker", "outcome": "YES", "price": 52, "quantity": 40 }
+  ],
+  "policies": [
+    {
+      "agentId": "agent-research",
+      "allowedTools": ["getMarket", "getRules", "getPortfolio", "searchEvidence", "requestOrder"],
+      "marketScope": ["nba-2026-10-20-bos-nyk"],
+      "budget": 10000,
+      "maxOrderQuantity": 100,
+      "approvalThreshold": 5000,
+      "runDeadlineSeconds": 120
+    },
+    {
+      "agentId": "agent-reckless",
+      "allowedTools": ["getMarket", "getRules", "searchEvidence", "requestOrder"],
+      "marketScope": ["nba-2026-10-20-bos-nyk"],
+      "budget": 5000,
+      "maxOrderQuantity": 50,
+      "approvalThreshold": null,
+      "runDeadlineSeconds": 30
+    }
+  ],
+  "evidence": [
+    {
+      "evidenceId": "ev-nyk-injury-0001",
+      "marketId": "nba-2026-10-20-bos-nyk",
+      "title": "Injury report: NYK starting guard questionable",
+      "summary": "Fixture injury report lists New York's starting point guard as questionable with a hamstring strain; minutes likely limited if active.",
+      "source": "fixture:injury-report",
+      "publishedAt": "2026-10-20T18:00:00.000Z",
+      "stance": "supports_yes"
+    },
+    {
+      "evidenceId": "ev-bos-form-0002",
+      "marketId": "nba-2026-10-20-bos-nyk",
+      "title": "Team form: BOS 7-3 over last ten preseason and regular-season games",
+      "summary": "Boston closed the preseason 7-3 in its last ten, with the league's second-best net rating in that span.",
+      "source": "fixture:team-form",
+      "publishedAt": "2026-10-20T17:30:00.000Z",
+      "stance": "supports_yes"
+    },
+    {
+      "evidenceId": "ev-nyk-home-0003",
+      "marketId": "nba-2026-10-20-bos-nyk",
+      "title": "Home court: NYK won 64% of home games last season",
+      "summary": "New York's home record last season was 26-15; opening-night crowds historically help the home side.",
+      "source": "fixture:team-form",
+      "publishedAt": "2026-10-20T17:00:00.000Z",
+      "stance": "supports_no"
+    }
+  ],
+  "resolution": {
+    "winningOutcome": "YES",
+    "source": "fixture:final-score",
+    "finalScore": "BOS 112 - NYK 104"
+  }
+}

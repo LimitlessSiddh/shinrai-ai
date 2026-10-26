@@ -1,0 +1,22 @@
+{
+  "name": "@shinrai/adapters",
+  "version": "0.1.0",
+  "private": true,
+  "type": "module",
+  "exports": {
+    ".": "./src/index.ts"
+  },
+  "dependencies": {
+    "@aws-sdk/client-eventbridge": "3.1154.0",
+    "@shinrai/agent-tools": "workspace:*",
+    "@shinrai/contracts": "workspace:*",
+    "@shinrai/domain": "workspace:*",
+    "@shinrai/observability": "workspace:*",
+    "nats": "2.29.3",
+    "pg": "8.23.1",
+    "zod": "4.6.7"
+  },
+  "optionalDependencies": {
+    "@openai/agents": "0.20.0"
+  }
+}

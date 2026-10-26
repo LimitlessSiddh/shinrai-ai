@@ -1,0 +1,42 @@
+# Release validation only. This workflow never deploys, holds no cloud credentials and
+# never publishes a release. A future deploy workflow needs explicit approval and a
+# protected GitHub environment.
+name: Release validation
+
+on:
+  workflow_dispatch:
+  push:
+    tags: ['v*']
+
+concurrency:
+  group: release-validation-${{ github.ref }}
+  cancel-in-progress: true
+
+permissions:
+  contents: read
+
+jobs:
+  validate:
+    runs-on: ubuntu-24.04
+    timeout-minutes: 20
+    steps:
+      - uses: actions/checkout@v5
+      - uses: pnpm/action-setup@v4
+      - uses: actions/setup-node@v5
+        with:
+          node-version-file: .nvmrc
+          cache: pnpm
+      - run: pnpm install --frozen-lockfile
+      - name: Build static web artifact
+        run: pnpm build
+      - name: Verify infrastructure plan (synth + assertions, no deploy)
+        run: |
+          pnpm cdk:test
+          pnpm cdk:synth
+      - uses: actions/upload-artifact@v4
+        with:
+          name: release-candidate
+          path: |
+            apps/web/out/
+            infra/cdk/cdk.out/*.template.json
+          retention-days: 14
