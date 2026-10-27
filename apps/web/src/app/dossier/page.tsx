@@ -15,7 +15,7 @@ import {
 } from 'lucide-react';
 import { Suspense } from 'react';
 import { DecisionStatus, Empty, ErrorState, LoadingPanel, Panel, Status } from '@/components/ui';
-import { credits, time, usePoll } from '@/lib/api';
+import { credits, percent, time, usePoll } from '@/lib/api';
 import { isOrderRequest } from '@/lib/derive';
 import type { AgentPolicy } from '@shinrai/contracts';
 import type { RunDetail, Trace } from '@/lib/types';
@@ -268,6 +268,61 @@ function EvidencePanel({ trace }: { trace: Trace }) {
   );
 }
 
+/** A concise research result. It deliberately contains conclusions, evidence and policy records—not private reasoning. */
+function ResearchResult({ run, trace }: { run: RunDetail['run']; trace: Trace }) {
+  const order = isOrderRequest(run.order_request) ? run.order_request : null;
+  const cited = order?.evidenceIds ?? run.conclusion?.evidenceIds ?? [];
+  const available = retrievedEvidence(trace);
+  const completeness = cited.length
+    ? `${cited.length}/${available.length || cited.length} cited`
+    : available.length
+      ? `${available.length} available · none cited`
+      : 'No evidence record';
+  const outcome = order
+    ? `${order.outcome} · ${percent(order.probabilityYes, 0)}`
+    : run.conclusion
+      ? `${percent(run.conclusion.probabilityYes, 0)} estimate`
+      : 'No prediction';
+  const explanation = run.conclusion?.thesis ?? 'No conclusion was recorded for this run.';
+
+  return (
+    <section className="dossier-result" aria-labelledby="result-title">
+      <article className="panel dossier-hero">
+        <span className="label">Selected result</span>
+        <h2 id="result-title">{outcome}</h2>
+        <p className="dossier-explanation">{explanation}</p>
+        <p className="help">
+          This is a concise recorded conclusion, not a guarantee or a private model reasoning trace.
+        </p>
+      </article>
+      <aside className="panel dossier-context" aria-label="Research context">
+        <div>
+          <span className="label">Evidence completeness</span>
+          <strong>{completeness}</strong>
+        </div>
+        <div>
+          <span className="label">Policy outcome</span>
+          <DecisionStatus value={run.policy_decision} />
+        </div>
+        <div>
+          <span className="label">Run status</span>
+          <DecisionStatus value={run.status} />
+        </div>
+        <div>
+          <span className="label">Recorded sources</span>
+          <strong>{available.length}</strong>
+        </div>
+        <div>
+          <span className="label">Uncertainty</span>
+          <span className="help">
+            No dedicated uncertainty field is present in the current run contract.
+          </span>
+        </div>
+      </aside>
+    </section>
+  );
+}
+
 function LedgerImpact({ trace }: { trace: Trace }) {
   return (
     <Panel
@@ -483,11 +538,13 @@ function Dossier() {
       {back}
       <div className="page-head">
         <div>
-          <p className="label">Immutable decision dossier · {d.run.agent_id}</p>
+          <p className="label" style={{ color: 'var(--color-signal)' }}>
+            Prediction detail · {d.run.agent_id}
+          </p>
           <h1 className="page-title">{d.run.scenario}</h1>
           <p className="page-desc">
-            Before the market accepts an order, Shinrai asks whether the agent should be allowed to
-            make it.
+            Inspect the result, its recorded evidence, uncertainty boundary, policy outcome, and
+            concise activity.
           </p>
         </div>
         <div className="row">
@@ -501,6 +558,7 @@ function Dossier() {
           This order is held for a human decision. Approve or reject it from Overview.
         </p>
       ) : null}
+      <ResearchResult run={d.run} trace={d.trace} />
       <Pipeline trace={d.trace} />
       <div className="grid cols-2">
         <PolicyGate trace={d.trace} policy={d.run.policy} />

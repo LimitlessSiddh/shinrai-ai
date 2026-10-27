@@ -13,6 +13,7 @@ This folder holds the product, research, architecture and plan documents that V1
 7. [Discovery and MVP plan](plans/2026-10-19-discovery-and-mvp-plan.md) — the original staged discovery record.
 8. [Stealth Signal UI system](design/2026-10-20-stealth-signal-ui-system.md) — the dashboard's design rules.
 9. [Implementation notes](implementation/) — decisions, progress, architecture map, testing, safety and cost, demo walkthrough.
+10. [Frontend reset handoff](design/2026-10-26-frontend-implementation-handoff.md) — approved light research-workspace direction, prototype, and implementation map.
 
 ## Current checkpoint
 

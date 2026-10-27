@@ -6,8 +6,10 @@ test('empty state seeds the fixture, then an insufficient-credit order is reject
   request,
 }) => {
   await page.goto('/');
-  await expect(page.getByRole('heading', { name: 'No paper market yet' })).toBeVisible();
-  await page.getByRole('button', { name: /Seed fixture/ }).click();
+  await expect(
+    page.getByRole('heading', { name: 'No research slate is available yet' }),
+  ).toBeVisible();
+  await page.getByRole('button', { name: /Prepare/ }).click();
   await openOverview(page);
 
   const operator = page.getByTestId('available-operator');

@@ -10,7 +10,6 @@ import { CommandPalette } from './CommandPalette';
 import { activeNav, NAV } from './nav';
 import { Toasts } from './Toasts';
 
-/** Ring-and-signal mark: the market (rings) around one active intent (signal). */
 function BrandMark({ size = 28 }: { size?: number }) {
   return (
     <svg width={size} height={size} viewBox="0 0 28 28" aria-hidden="true">
@@ -20,20 +19,12 @@ function BrandMark({ size = 28 }: { size?: number }) {
         width="27"
         height="27"
         rx="8"
-        fill="var(--color-surface-strong)"
-        stroke="var(--color-border-strong)"
+        fill="var(--color-signal)"
+        stroke="var(--color-signal)"
       />
-      <circle cx="14" cy="14" r="8" fill="none" stroke="var(--color-steel)" strokeWidth="1.5" />
-      <circle
-        cx="14"
-        cy="14"
-        r="4.5"
-        fill="none"
-        stroke="var(--color-steel)"
-        strokeWidth="1.5"
-        opacity="0.6"
-      />
-      <circle cx="17.5" cy="10.5" r="2.5" fill="var(--color-signal)" />
+      <circle cx="14" cy="14" r="8" fill="none" stroke="#fff" strokeWidth="1.5" />
+      <circle cx="14" cy="14" r="4.5" fill="none" stroke="#fff" strokeWidth="1.5" opacity="0.6" />
+      <circle cx="17.5" cy="10.5" r="2.5" fill="#fff" />
     </svg>
   );
 }
@@ -143,18 +134,20 @@ function Frame({ children }: { children: ReactNode }) {
             <BrandMark />
             <span>
               <span className="brand-name">SHINRAI</span>
-              <span className="brand-sub label">Agent market OS</span>
+              <span className="brand-sub label">NBA research workspace</span>
             </span>
           </Link>
           <div className="env">
             <span className="row" style={{ gap: 8 }}>
               <ShieldCheck size={16} style={{ color: 'var(--color-steel)' }} aria-hidden="true" />
-              <span style={{ fontSize: 'var(--text-sm)', fontWeight: 600 }}>Paper only</span>
+              <span style={{ fontSize: 'var(--text-sm)', fontWeight: 600 }}>
+                Paper-only research
+              </span>
             </span>
             <span className="label">local · demo</span>
           </div>
           <nav aria-label="Primary">
-            <p className="nav-section label">Workspace</p>
+            <p className="nav-section label">Research</p>
             <ul className="nav">{links('side')}</ul>
           </nav>
           <div className="sidebar-foot">
@@ -192,7 +185,7 @@ function Frame({ children }: { children: ReactNode }) {
             <div className="crumbs">
               <span>demo</span>
               <span aria-hidden="true">/</span>
-              <strong>{current?.label ?? 'Overview'}</strong>
+              <strong>{current?.label ?? 'Workspace'}</strong>
               {path.startsWith('/dossier') ? (
                 <>
                   <span aria-hidden="true">/</span>
@@ -222,9 +215,9 @@ function Frame({ children }: { children: ReactNode }) {
             {children}
           </main>
           <footer className="footnote">
-            <strong className="muted">Paper credits only.</strong> An engineering sandbox for
-            evaluating AI agents: credits have no cash value, nothing here is a wager or betting
-            advice, and market data comes from a synthetic, versioned fixture.
+            <strong className="muted">Paper-only research.</strong> Shinrai records evidence, policy
+            outcomes, and reproducible evaluations. Credits have no cash value; nothing here is a
+            wager, trading service, or betting advice.
           </footer>
         </div>
       </div>

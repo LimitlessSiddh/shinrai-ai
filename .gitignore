@@ -13,6 +13,8 @@ test-results/
 playwright-report/
 blob-report/
 .vitest/
+.playwright-cli/
+output/
 
 # Local services, runtime state, secrets
 .env

@@ -12,11 +12,10 @@ test('fixture -> agent and human commands -> match -> settlement -> ledger, port
   await page.getByRole('radio', { name: /Research, cite evidence/ }).check();
   await page.getByRole('button', { name: 'Run agent' }).click();
   await expect(toast(page)).toContainText('Agent run completed');
-  await expect(page.getByTestId('thesis-call')).toHaveText('BUY YES');
-  await expect(page.getByTestId('thesis-order')).toHaveText('50 contracts at 58¢ · 29.00 credits');
+  await expect(page.getByTestId('workspace-outcome')).toHaveText(/YES/);
   await expect(page.getByText('Policy approved').first()).toBeVisible();
   await expect(page.getByTestId('reserved-agent-research')).toHaveText('0.00');
-  await expect(page.getByTestId('order-book')).toContainText(/42¢\s*10/); // maker NO @ 42: 60 placed, 50 taken by the agent
+  await expect(page.getByTestId('activity')).toContainText('agent-research');
 
   // Human order crosses the remaining maker NO @ 42.
   await actionTab(page, 'Paper order');
@@ -37,7 +36,7 @@ test('fixture -> agent and human commands -> match -> settlement -> ledger, port
   expect(pf.ledger.map((l) => l.reason)).toContain('settle');
 
   // Run log -> dossier for the approved run.
-  await page.getByRole('link', { name: 'Runs', exact: true }).click();
+  await page.getByRole('link', { name: 'Audit records', exact: true }).click();
   await page.getByTestId('runs-table').getByRole('link', { name: 'research-happy' }).click();
   await expect(page.getByRole('heading', { level: 1, name: 'research-happy' })).toBeVisible();
   await expect(page.getByTestId('trace-table')).toContainText('PlaceOrder · approved');
@@ -45,6 +44,6 @@ test('fixture -> agent and human commands -> match -> settlement -> ledger, port
   await expect(page.getByRole('heading', { name: 'Ledger impact' })).toBeVisible();
 
   // The ledger journal balances.
-  await page.getByRole('link', { name: 'Ledger', exact: true }).click();
+  await page.goto('/ledger/');
   await expect(page.getByText('Books balance · net 0.00')).toBeVisible();
 });

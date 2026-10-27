@@ -127,10 +127,10 @@
 .btn-primary {
   background: var(--color-signal);
   border-color: var(--color-signal);
-  color: var(--color-canvas);
+  color: #fff;
 }
 .btn-primary:hover:not(:disabled) {
-  background: #d4ff6a;
+  background: #1d55b8;
 }
 .btn-danger {
   background: transparent;
@@ -209,9 +209,15 @@
   color: var(--color-text-secondary);
   background: var(--tint-steel);
 }
+.tone-neutral > span {
+  color: var(--color-text-primary);
+}
 .tone-signal {
   color: var(--color-signal);
   background: var(--tint-signal);
+}
+.tone-signal > span {
+  color: var(--color-text-primary);
 }
 .tag {
   display: inline-flex;
@@ -382,7 +388,7 @@ legend {
   transition: background var(--motion-fast);
 }
 .table tbody tr:hover {
-  background: rgb(255 255 255 / 0.02);
+  background: var(--tint-signal);
 }
 .table tr:last-child td {
   border-bottom: 0;
@@ -493,11 +499,11 @@ tr.clickable .row-link::after {
   font-size: var(--text-sm);
 }
 .callout.warning {
-  border-color: rgb(244 185 66 / 0.4);
+  border-color: #e8c47c;
   background: var(--tint-warning);
 }
 .callout.danger {
-  border-color: rgb(255 107 92 / 0.4);
+  border-color: #e7a4a0;
   background: var(--tint-danger);
 }
 

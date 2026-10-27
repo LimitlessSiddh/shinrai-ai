@@ -1,9 +1,12 @@
 import AxeBuilder from '@axe-core/playwright';
 import { expect, test } from '@playwright/test';
-import { ensureSeeded, MARKET_HEADING } from './support';
+import { apiPost, ensureSeeded, WORKSPACE_HEADING } from './support';
 
 const VIEWS = [
-  { path: '/', heading: MARKET_HEADING },
+  { path: '/', heading: WORKSPACE_HEADING },
+  { path: '/agents/', heading: 'Agent setup' },
+  { path: '/experiments/', heading: 'Compare versions carefully' },
+  { path: '/arena/', heading: 'Arena' },
   { path: '/runs/', heading: 'Agent runs' },
   { path: '/dossier/', heading: /.+/ },
   { path: '/ledger/', heading: 'Ledger' },
@@ -14,7 +17,15 @@ const VIEWS = [
 for (const v of VIEWS) {
   test(`${v.path} has no WCAG 2.1 A/AA violations`, async ({ page, request }) => {
     await ensureSeeded(request);
-    await page.goto(v.path);
+    if (v.path === '/dossier/') {
+      const run = await apiPost<{ runId: string }>(request, '/agent-runs', {
+        fixtureVersion: 'nba-2026-10-20.1',
+        scenarioId: 'research-happy',
+      });
+      await page.goto(`/dossier/?run=${encodeURIComponent(run.runId)}`);
+    } else {
+      await page.goto(v.path);
+    }
     await expect(page.getByRole('heading', { level: 1, name: v.heading })).toBeVisible();
     const results = await new AxeBuilder({ page })
       .withTags(['wcag2a', 'wcag2aa', 'wcag21a', 'wcag21aa'])
@@ -36,13 +47,13 @@ test('keyboard: skip link first, visible signal focus ring, nav reachable', asyn
 
   await page.goto('/');
   for (let i = 0; i < 3; i++) await page.keyboard.press('Tab'); // skip link, brand, first nav item
-  await expect(page.getByRole('link', { name: /^Overview/ })).toBeFocused();
+  await expect(page.getByRole('link', { name: /^Workspace/ })).toBeFocused();
   const outline = await page.evaluate(() => {
     const s = getComputedStyle(document.activeElement as HTMLElement);
     return { outline: s.outlineStyle, color: s.outlineColor };
   });
   expect(outline.outline).toBe('solid');
-  expect(outline.color).toBe('rgb(199, 255, 61)'); // --color-signal
+  expect(outline.color).toBe('rgb(36, 99, 212)'); // --color-signal
 });
 
 test('action tabs follow the ARIA tabs pattern with arrow keys', async ({ page }) => {
@@ -72,9 +83,9 @@ test('command palette opens with Ctrl+K and navigates by keyboard', async ({ pag
   await page.waitForTimeout(50);
   await page.keyboard.press('Control+k');
   await expect(input).toBeFocused();
-  await input.fill('ledger');
+  await input.fill('audit');
   await page.keyboard.press('Enter');
-  await expect(page.getByRole('heading', { level: 1, name: 'Ledger' })).toBeVisible();
+  await expect(page.getByRole('heading', { level: 1, name: 'Agent runs' })).toBeVisible();
 });
 
 test('status is never color-only: every pill has an icon and text', async ({ page }) => {

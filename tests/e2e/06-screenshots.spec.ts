@@ -1,22 +1,24 @@
 import { expect, test } from '@playwright/test';
-import { MARKET_HEADING } from './support';
+import { apiPost, ensureSeeded, WORKSPACE_HEADING } from './support';
 
 const VIEWS = [
-  { name: 'overview', path: '/', heading: MARKET_HEADING },
-  { name: 'runs', path: '/runs/', heading: 'Agent runs' },
-  { name: 'dossier', path: '/dossier/', heading: /.+/ },
-  { name: 'ledger', path: '/ledger/', heading: 'Ledger' },
-  { name: 'replay', path: '/replay/', heading: 'Replay proof' },
-  { name: 'system', path: '/system/', heading: 'System' },
+  { name: 'workspace', path: '/', heading: WORKSPACE_HEADING },
+  { name: 'agents', path: '/agents/', heading: 'Agent setup' },
+  { name: 'experiments', path: '/experiments/', heading: 'Compare versions carefully' },
+  { name: 'arena', path: '/arena/', heading: 'Arena' },
+  { name: 'audit-records', path: '/runs/', heading: 'Agent runs' },
 ];
 const SIZES = [
   { label: 'desktop-1440', width: 1440, height: 1000 },
+  { label: 'laptop-1280', width: 1280, height: 1000 },
+  { label: 'tablet-768', width: 768, height: 1000 },
   { label: 'mobile-390', width: 390, height: 844 },
 ];
 
 for (const size of SIZES) {
   for (const v of VIEWS) {
-    test(`screenshot ${v.name} @ ${size.label}`, async ({ page }) => {
+    test(`screenshot ${v.name} @ ${size.label}`, async ({ page, request }) => {
+      await ensureSeeded(request);
       await page.setViewportSize({ width: size.width, height: size.height });
       await page.emulateMedia({ reducedMotion: 'reduce' }); // settled frames, no mid-animation captures
       await page.goto(v.path);
@@ -48,4 +50,20 @@ for (const size of SIZES) {
       });
     });
   }
+
+  test(`screenshot prediction detail @ ${size.label}`, async ({ page, request }) => {
+    await ensureSeeded(request);
+    const run = await apiPost<{ runId: string }>(request, '/agent-runs', {
+      fixtureVersion: 'nba-2026-10-20.1',
+      scenarioId: 'research-happy',
+    });
+    await page.setViewportSize({ width: size.width, height: size.height });
+    await page.emulateMedia({ reducedMotion: 'reduce' });
+    await page.goto(`/dossier/?run=${encodeURIComponent(run.runId)}`);
+    await expect(page.getByRole('heading', { level: 1, name: 'research-happy' })).toBeVisible();
+    await page.screenshot({
+      path: `docs/demo/screenshots/prediction-detail-${size.label}.png`,
+      fullPage: true,
+    });
+  });
 }

@@ -28,11 +28,11 @@ export async function ensureSeeded(request: APIRequestContext) {
   await apiPost(request, `/fixtures/${FIXTURE}/seed`);
 }
 
-export const MARKET_HEADING = 'Boston at New York';
+export const WORKSPACE_HEADING = 'NBA predictions';
 
 export async function openOverview(page: Page) {
   await page.goto('/');
-  await expect(page.getByRole('heading', { level: 1, name: MARKET_HEADING })).toBeVisible();
+  await expect(page.getByRole('heading', { level: 1, name: WORKSPACE_HEADING })).toBeVisible();
 }
 
 /** Selects an action-panel tab (Agent run / Paper order / Resolve). */

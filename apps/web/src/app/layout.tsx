@@ -10,11 +10,11 @@ import '../styles/components.css';
 import '../styles/views.css';
 
 export const metadata: Metadata = {
-  title: 'Shinrai — agent market OS',
-  description: 'Auditable, paper-only NBA prediction-market sandbox for AI agents.',
+  title: 'Shinrai AI — NBA research workspace',
+  description: 'An auditable, paper-only NBA agent research workspace.',
 };
 
-export const viewport: Viewport = { themeColor: '#0A0D0C', width: 'device-width', initialScale: 1 };
+export const viewport: Viewport = { themeColor: '#F7F6F2', width: 'device-width', initialScale: 1 };
 
 export default function RootLayout({ children }: { children: ReactNode }) {
   return (
