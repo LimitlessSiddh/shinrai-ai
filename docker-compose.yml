@@ -1,7 +1,7 @@
 # Local V1 stack. Default: PostgreSQL + NATS JetStream. Optional: `--profile otel`.
 services:
   postgres:
-    image: postgres:17.6-alpine
+    image: postgres:18.4-alpine
     environment:
       POSTGRES_USER: shinrai
       POSTGRES_PASSWORD: shinrai_local
