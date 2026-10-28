@@ -197,6 +197,9 @@
   color: var(--color-warning);
   background: var(--tint-warning);
 }
+.tone-warning > span {
+  color: var(--color-text-primary);
+}
 .tone-danger {
   color: var(--color-danger);
   background: var(--tint-danger);

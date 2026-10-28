@@ -45,7 +45,7 @@ for (const size of SIZES) {
         `no horizontal page scroll; widest: ${offenders.join(', ')}`,
       ).toBeLessThanOrEqual(0);
       await page.screenshot({
-        path: `docs/demo/screenshots/${v.name}-${size.label}.png`,
+        path: `test-results/generated-screenshots/${v.name}-${size.label}.png`,
         fullPage: true,
       });
     });
@@ -62,7 +62,7 @@ for (const size of SIZES) {
     await page.goto(`/dossier/?run=${encodeURIComponent(run.runId)}`);
     await expect(page.getByRole('heading', { level: 1, name: 'research-happy' })).toBeVisible();
     await page.screenshot({
-      path: `docs/demo/screenshots/prediction-detail-${size.label}.png`,
+      path: `test-results/generated-screenshots/prediction-detail-${size.label}.png`,
       fullPage: true,
     });
   });

@@ -1,6 +1,6 @@
 # V1 implementation progress
 
-Source: [`docs/plans/2026-10-20-full-v1-implementation-goal-prompt.md`](../plans/2026-10-20-full-v1-implementation-goal-prompt.md). Branch: `v1-implementation` (release candidate; push and PR pending).
+Source: [`docs/plans/2026-10-20-full-v1-implementation-goal-prompt.md`](../plans/2026-10-20-full-v1-implementation-goal-prompt.md). Released on `main`.
 
 Legend: `[x]` verified by a command run locally · `[ ]` not done yet.
 
@@ -35,7 +35,7 @@ Legend: `[x]` verified by a command run locally · `[ ]` not done yet.
 ## Phase E — API and dashboard
 
 - [x] Typed Fastify API: scoped bearer principals (agents clamped to read-only), correlation id on every response/header, typed 4xx domain errors, no DB route (`tests/integration/api.test.ts`)
-- [x] Six console views on live API data (Overview, Runs, Dossier, Ledger, Replay and System), with polling and loading/empty/error/blocked states at desktop and mobile widths
+- [x] Nine console routes on live API data (Workspace, Agents, Experiments, Arena, Runs, Dossier, Ledger, Replay and System), with polling and loading/empty/error/blocked states at desktop and mobile widths
 
 ## Phase F — Agent gateway and evaluation
 
@@ -59,7 +59,7 @@ Legend: `[x]` verified by a command run locally · `[ ]` not done yet.
 - [x] App shell (sidebar / mobile tab bar), ⌘K palette, toasts, live pipeline health
 - [x] Overview: market strip, edge meter, order book, fills, approval queue, tabbed actions
 - [x] New Runs, Ledger and System views; dossier rebuilt as a five-stage pipeline
-- [x] Verified: `pnpm test:e2e` covers all six views, including axe, keyboard, reduced-motion and responsive checks; unit + evaluation suites and the production build also pass
+- [x] Verified: `pnpm test:e2e` covers all nine routes, including Axe, keyboard, reduced-motion and responsive checks; unit + evaluation suites and the production build also pass
 
 ## Phase I — Polymarket (optional)
 
@@ -83,7 +83,7 @@ Legend: `[x]` verified by a command run locally · `[ ]` not done yet.
 
 ## Release handoff
 
-### Final local verification — 2026-10-25
+### Final local verification — 2026-10-28
 
 | Check | Result |
 | --- | --- |
@@ -91,15 +91,15 @@ Legend: `[x]` verified by a command run locally · `[ ]` not done yet.
 | Unit tests | 32/32 |
 | Agent evaluation tests | 27/27 |
 | PostgreSQL + NATS integration tests | 35/35 |
-| Production web build | pass (7 application routes plus the generated not-found page) |
-| Playwright E2E, accessibility and screenshots | 27/27 across all six console views |
+| Production web build | pass (9 application routes plus the generated not-found page) |
+| Playwright E2E, accessibility and screenshots | 42/42 across all nine console routes and four viewport widths |
 | Failure drills | 6/6 PASS |
 | CDK assertions and synth | 18/18; synth pass; nothing deployed |
 | Secret-history scan and workflow lint | no leaks; clean |
 | Manual demo and replay | demo pass; two replay reports matched hash `9e3ae4e5346f640c` |
 
 - The command palette shortcut now always opens (rather than toggles) the palette; its keyboard flow passed ten repeated cold browser runs before the final E2E pass.
-- Pull request [#1](https://github.com/LimitlessSiddh/shinrai-ai/pull/1) is open from `v1-implementation` to `main`; do not merge until it has been reviewed.
+- Pull request [#1](https://github.com/LimitlessSiddh/shinrai-ai/pull/1) merged to `main` on 2026-10-26. The release is now maintained directly from `main`.
 - This release stays local-first and paper-only: deployment, hosted identity, real model calls, live data and Polymarket remain out of scope.
 
 ## Intentional exclusions
@@ -113,5 +113,5 @@ Legend: `[x]` verified by a command run locally · `[ ]` not done yet.
 - **What this is:** the checklist and proof sheet for Shinrai V1. Every box is ticked only after a real command passed on this machine.
 - **What it means:** Shinrai now runs end to end on a laptop. An AI "trader" looks at a fake NBA market (pick who wins), cites evidence and asks to place a paper bet. Unsafe requests are blocked and the reason is shown. Every credit moves through a bank-style ledger (each move recorded twice, in and out). The whole game can be replayed and scored identically every time.
 - **Key risk and the fix:** the danger with money-like systems is double-spending or paying out twice. Tests fire 20 simultaneous orders, duplicate retries and five simultaneous settlements, and nothing is ever counted twice. The database itself refuses unbalanced or edited ledger rows.
-- **ON:** local app, six-view dashboard (works on phones and is keyboard-accessible), fake AI, fake money, GitHub checks, and the AWS blueprint (generated only).
+- **ON:** local app, nine-route dashboard (works on phones and is keyboard-accessible), fake AI, fake money, GitHub checks, and the AWS blueprint (generated only).
 - **OFF:** real money, real AI calls (opt-in switch exists but is off), AWS deployment (nothing is running or costing money), live sports data, and Polymarket.
