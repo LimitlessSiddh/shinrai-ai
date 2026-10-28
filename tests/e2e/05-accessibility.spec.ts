@@ -17,6 +17,9 @@ const VIEWS = [
 for (const v of VIEWS) {
   test(`${v.path} has no WCAG 2.1 A/AA violations`, async ({ page, request }) => {
     await ensureSeeded(request);
+    // Audit the settled UI, not a partially transparent entrance-animation frame. This matches
+    // the deterministic screenshot suite and avoids timing-dependent contrast results in CI.
+    await page.emulateMedia({ reducedMotion: 'reduce' });
     if (v.path === '/dossier/') {
       const run = await apiPost<{ runId: string }>(request, '/agent-runs', {
         fixtureVersion: 'nba-2026-10-20.1',
