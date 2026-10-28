@@ -40,7 +40,7 @@
     "@shinrai/worker": "workspace:*",
     "@testcontainers/postgresql": "12.2.1",
     "@types/aws-lambda": "8.10.164",
-    "@types/node": "24.19.2",
+    "@types/node": "26.6.5",
     "@types/pg": "8.23.1",
     "eslint": "10.13.0",
     "eslint-plugin-react-hooks": "7.1.1",
