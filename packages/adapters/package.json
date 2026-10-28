@@ -7,7 +7,7 @@
     ".": "./src/index.ts"
   },
   "dependencies": {
-    "@aws-sdk/client-eventbridge": "3.1154.0",
+    "@aws-sdk/client-eventbridge": "3.1156.0",
     "@shinrai/agent-tools": "workspace:*",
     "@shinrai/contracts": "workspace:*",
     "@shinrai/domain": "workspace:*",
@@ -17,6 +17,6 @@
     "zod": "4.6.7"
   },
   "optionalDependencies": {
-    "@openai/agents": "0.20.0"
+    "@openai/agents": "0.21.0"
   }
 }
